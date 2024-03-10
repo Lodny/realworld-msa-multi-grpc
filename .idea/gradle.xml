@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/rw-article" />
+            <option value="$PROJECT_DIR$/rw-comment" />
+            <option value="$PROJECT_DIR$/rw-common" />
+            <option value="$PROJECT_DIR$/rw-favorite" />
+            <option value="$PROJECT_DIR$/rw-follow" />
+            <option value="$PROJECT_DIR$/rw-tag" />
+            <option value="$PROJECT_DIR$/rw-user" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,43 @@
+.tag-default {
+    color: #fff !important;
+    background-color: #818a91;
+    font-size: .8rem;
+    padding-top: .1rem;
+    padding-bottom: .1rem;
+    white-space: nowrap;
+    margin-right: 3px;
+    margin-bottom: .2rem;
+    display: inline-block;
+
+    &[href]:focus, &[href]:hover {
+        background-color: #687077
+    }
+
+    &:hover {
+        text-decoration: none
+    }
+
+    &.tag-outline {
+        border: 1px solid #ddd;
+        color: #aaa !important;
+        background: 0 0 !important
+    }
+}
+
+.tag-pill {
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem
+}
+
+
+ul {
+    &.tag-list {
+        padding-left: 0 !important;
+        display: inline-block;
+        list-style: none !important;
+        li {
+            display: inline-block !important;
+        }
+    }
+}

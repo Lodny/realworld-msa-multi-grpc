@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(':rw-common')
+
+    implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
+    implementation files('libs/rpc-test-0.0.1-SNAPSHOT-plain.jar')
+}

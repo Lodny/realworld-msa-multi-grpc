@@ -1,0 +1,40 @@
+server:
+  port: 8084
+
+grpc:
+  server:
+    port: 9097
+
+spring:
+  application:
+    name: tag
+  main:
+    allow-circular-references: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/rw-msa-tag;AUTO_SERVER=TRUE
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: on
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+jwt:
+  header: Authorization
+  token-title: "Token "
+  secret: 231qwefopjvkjksflj2iocksdmv89iwseknr23fsd89ihrn23jhv98iuoxrj2389jhcisdkrjh2398
+  expiration-ms: 600_000_000 # 10 min
+
+

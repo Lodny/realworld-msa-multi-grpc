@@ -1,0 +1,37 @@
+.page {
+    margin-top: 1.5rem;
+}
+
+.container {
+    max-width: 720px;
+}
+
+a {
+    color: #5CB85C;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.text-xs-center {
+    text-align: center !important;
+}
+
+.btn:focus, .btn:hover {
+    text-decoration: none;
+}
+
+.btn-lg, .btn-group-lg > .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    border-radius: 0.3rem;
+}
