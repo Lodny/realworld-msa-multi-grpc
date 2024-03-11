@@ -7,6 +7,7 @@ option java_package = "com.lodny.rwcommon.grpc.tag";
 
 service Tag {
   rpc registerTags (RegisterTagsRequest) returns (Empty);
+  rpc getTop10TagString (Empty) returns (Top10TagsResponse);
 }
 
 message Empty {}
@@ -24,7 +25,7 @@ message RegisterTagsRequest {
 //  string message = 1;
 //}
 
-//message Top10TagsResponse {
-//  repeated string tags = 1;
-//}
+message Top10TagsResponse {
+  repeated string tags = 1;
+}
 

@@ -42,16 +42,6 @@ public class TagController {
         return ResponseEntity.ok(tags.stream().map(Tag::getTag).collect(Collectors.toSet()));
     }
 
-    @GetMapping("/tags")
-    public ResponseEntity<?> getTop10Tags() {
-        log.info("getTop10Tags() : 1={}", 1);
-
-        List<String> top10Tags = tagService.getTop10Tags();
-        log.info("getTop10Tags() : top10Tags={}", top10Tags);
-
-        return ResponseEntity.ok(new WrapTag10Response(top10Tags));
-    }
-
     @GetMapping("/tags/{tag}/article-ids")
     public ResponseEntity<?> getArticleIdsByTag(@PathVariable String tag) {
         log.info("getArticleIdsByTag() : tag={}", tag);

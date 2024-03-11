@@ -27,10 +27,6 @@ public class TagService {
         return count;
     }
 
-    public List<String> getTop10Tags() {
-        return tagRepository.getTop10Tags().stream().map(tag -> tag[0]).toList();
-    }
-
     public Set<Tag> getTags(final Long articleId) {
         return tagRepository.findAllByArticleId(articleId);
     }

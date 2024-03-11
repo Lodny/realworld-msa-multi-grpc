@@ -1,25 +1,23 @@
 package com.lodny.rwproxy.controller;
 
-import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwproxy.entity.wrapper.WrapTag10Response;
-import com.lodny.rwproxy.service.ProxyService;
+import com.lodny.rwproxy.service.TagGrpcClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class ProxyController {
+public class TagProxyController {
 
-    private final ProxyService proxyService;
+    private final TagGrpcClient tagGrpcClient;
 
 //    @JwtTokenRequired
 //    @PostMapping("/articles/{articleId}/tags/list")
@@ -45,7 +43,7 @@ public class ProxyController {
     public ResponseEntity<?> getTop10Tags() {
         log.info("getTop10Tags() : 1={}", 1);
 
-        List<String> top10Tags = proxyService.getTop10Tags();
+        List<String> top10Tags = tagGrpcClient.getTop10Tags();
         log.info("getTop10Tags() : top10Tags={}", top10Tags);
 
         return ResponseEntity.ok(new WrapTag10Response(top10Tags));
