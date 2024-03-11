@@ -1,34 +1,25 @@
 package com.lodny.rwproxy.service;
 
-import com.lodny.rwcommon.grpc.tag.Empty;
-import com.lodny.rwcommon.grpc.tag.RegisterTagsRequest;
 import com.lodny.rwcommon.grpc.tag.TagGrpc;
+import com.lodny.rwcommon.grpc.tag.TopTagStringsRequest;
+import com.lodny.rwcommon.grpc.tag.TopTagStringsResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
-//@RequiredArgsConstructor
 public class TagGrpcClient {
 
     @GrpcClient("tag-grpc")
     private TagGrpc.TagBlockingStub tagBlockingStub;
 
-    public List<String> getTop10Tags() {
-        return tagBlockingStub.getTop10TagString(Empty.getDefaultInstance())
-                .getTagsList();
-    }
+    public List<String> getTopTagStrings(int count) {
+        TopTagStringsResponse topTagStrings = tagBlockingStub.getTopTagStrings(TopTagStringsRequest.newBuilder().setCount(count).build());
+        log.info("getTopTagStrings() : topTagStrings={}", topTagStrings);
 
-    public void registerTags(final Set<String> tags, final Long articleId, final String token) {
-        log.info("registerTags() : tags={}", tags);
-
-        tagBlockingStub.registerTags(RegisterTagsRequest.newBuilder()
-                        .addAllTags(tags)
-                        .setArticleId(articleId)
-                        .build());
+        return topTagStrings.getTagsList();
     }
 }

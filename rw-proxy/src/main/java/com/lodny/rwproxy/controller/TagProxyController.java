@@ -19,53 +19,13 @@ public class TagProxyController {
 
     private final TagGrpcClient tagGrpcClient;
 
-//    @JwtTokenRequired
-//    @PostMapping("/articles/{articleId}/tags/list")
-//    public ResponseEntity<?> registerTags(@PathVariable final Long articleId,
-//                                          @RequestBody final Set<String> tags) {
-//        log.info("registerTags() : articleId={}", articleId);
-//        log.info("registerTags() : tags={}", tags);
-//        int count = proxyService.registerTags(articleId, tags);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(count);
-//    }
-//
-//    @GetMapping("/articles/{articleId}/tags")
-//    public ResponseEntity<?> getTags(@PathVariable final Long articleId) {
-//        log.info("getTags() : articleId={}", articleId);
-//        Set<Tag> tags = proxyService.getTags(articleId);
-//        log.info("getTags() : tags={}", tags);
-//
-//        return ResponseEntity.ok(tags.stream().map(Tag::getTag).collect(Collectors.toSet()));
-//    }
-
     @GetMapping("/tags")
-    public ResponseEntity<?> getTop10Tags() {
-        log.info("getTop10Tags() : 1={}", 1);
+    public ResponseEntity<?> getTopTagStrings() {
+        log.info("getTopTagStrings() : 1={}", 1);
 
-        List<String> top10Tags = tagGrpcClient.getTop10Tags();
-        log.info("getTop10Tags() : top10Tags={}", top10Tags);
+        List<String> top10TagStrings = tagGrpcClient.getTopTagStrings(10);
+        log.info("getTopTagStrings() : top10TagStrings={}", top10TagStrings);
 
-        return ResponseEntity.ok(new WrapTag10Response(top10Tags));
+        return ResponseEntity.ok(new WrapTag10Response(top10TagStrings));
     }
-
-//    @GetMapping("/tags/{tag}/article-ids")
-//    public ResponseEntity<?> getArticleIdsByTag(@PathVariable String tag) {
-//        log.info("getArticleIdsByTag() : tag={}", tag);
-//
-//        List<Long> articleIds = proxyService.getArticleIdsByTag(tag);
-//        log.info("getArticleIdsByTag() : articleIds={}", articleIds);
-//
-//        return ResponseEntity.ok(articleIds);
-//    }
-//
-//    @JwtTokenRequired
-//    @DeleteMapping("/tags/{articleId}")
-//    public ResponseEntity<?> deleteTagsByArticleId(@PathVariable Long articleId) {
-//        log.info("deleteTagsByArticleId() : articleId={}", articleId);
-//
-//        List<Tag> tags = proxyService.deleteTagsByArticleId(articleId);
-//
-//        return ResponseEntity.ok(tags.stream().map(Tag::getId).toList());
-//    }
 }

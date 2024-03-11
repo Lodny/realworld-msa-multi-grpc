@@ -2,10 +2,10 @@ server:
   port: 8084
 
 grpc:
-  client:
-    test:
-      negotiation-type: plaintext
-      address: 'static://127.0.0.1:9097'
+#  client:
+#    test:
+#      negotiation-type: plaintext
+#      address: 'static://127.0.0.1:9097'
 
   server:
     port: 9094
