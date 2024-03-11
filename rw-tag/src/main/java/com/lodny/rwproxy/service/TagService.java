@@ -17,16 +17,6 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public int registerTags(final Long articleId, final Set<String> tags) {
-        int count = 1;
-        tagRepository.saveAll(tags.stream()
-                .map(tag -> new Tag(articleId, tag))
-                .toList());
-        log.info("registerTags() : count={}", count);
-
-        return count;
-    }
-
     public Set<Tag> getTags(final Long articleId) {
         return tagRepository.findAllByArticleId(articleId);
     }

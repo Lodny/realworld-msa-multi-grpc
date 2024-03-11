@@ -22,17 +22,6 @@ public class TagController {
 
     private final TagService tagService;
 
-    @JwtTokenRequired
-    @PostMapping("/articles/{articleId}/tags/list")
-    public ResponseEntity<?> registerTags(@PathVariable final Long articleId,
-                                          @RequestBody final Set<String> tags) {
-        log.info("registerTags() : articleId={}", articleId);
-        log.info("registerTags() : tags={}", tags);
-        int count = tagService.registerTags(articleId, tags);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(count);
-    }
-
     @GetMapping("/articles/{articleId}/tags")
     public ResponseEntity<?> getTags(@PathVariable final Long articleId) {
         log.info("getTags() : articleId={}", articleId);
