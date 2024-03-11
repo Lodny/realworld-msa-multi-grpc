@@ -53,12 +53,12 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/api/favorite/*/article-ids
-        - id: comment
-          uri: http://localhost:8086
+        - id: proxy
+          uri: http://localhost:8089
           predicates:
             - Path=/api/articles/*/comments
-        - id: comment
-          uri: http://localhost:8086
+        - id: proxy
+          uri: http://localhost:8089
           predicates:
             - Path=/api/articles/*/comments/**
         - id: proxy

@@ -8,6 +8,12 @@ grpc:
       #      address: 'localhost:9090/grpc/tag'
       #      address: 'static://localhost:9094/grpc/tag'
       address: 'static://localhost:9094'
+    comment-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9096'
+    article-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9093'
 
 spring:
   application:

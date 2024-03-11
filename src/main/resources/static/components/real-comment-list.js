@@ -1,6 +1,7 @@
 import {iconCdn} from "../services/icon-cdn.js";
 import {currentUser} from "../services/store.js";
 import {actionQueue, addGoAction} from "../services/action-queue.js";
+import {RealComment} from "./real-comment.js";
 
 const style = `<style>
     .comment-form {
@@ -59,7 +60,7 @@ const getTemplate = (user) => {
             </div>
         </form>
         `}
-
+        
         <div class="comments"></div>
     `;
 }
