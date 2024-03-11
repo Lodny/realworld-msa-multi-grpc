@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/rw-common" />
             <option value="$PROJECT_DIR$/rw-favorite" />
             <option value="$PROJECT_DIR$/rw-follow" />
+            <option value="$PROJECT_DIR$/rw-proxy" />
             <option value="$PROJECT_DIR$/rw-tag" />
             <option value="$PROJECT_DIR$/rw-user" />
           </set>

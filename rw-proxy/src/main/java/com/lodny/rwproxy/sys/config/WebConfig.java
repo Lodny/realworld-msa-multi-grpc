@@ -1,4 +1,4 @@
-package com.lodny.rwtag.sys.config;
+package com.lodny.rwproxy.sys.config;
 
 import com.lodny.rwcommon.filter.JwtFilter;
 import com.lodny.rwcommon.interceptor.JwtTokenInterceptor;

@@ -1,4 +1,4 @@
-package com.lodny.rwtag.entity;
+package com.lodny.rwproxy.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

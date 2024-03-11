@@ -5,9 +5,9 @@ grpc:
   client:
     tag-grpc:
       negotiation-type: plaintext
-      address: 'localhost:9090/grpc/tag'
+#      address: 'localhost:9090/grpc/tag'
 #      address: 'static://localhost:9094/grpc/tag'
-#      address: 'static://localhost:9094'
+      address: 'static://localhost:9094'
 
   server:
     port: 9093

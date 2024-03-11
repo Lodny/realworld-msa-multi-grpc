@@ -49,14 +49,14 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/api/articles/*/tags
+#        - id: tag
+#          uri: http://localhost:8084
+#          predicates:
+#            - Path=/api/tags
         - id: tag
           uri: http://localhost:8084
           predicates:
-            - Path=/api/tags
-        - id: tag
-          uri: http://localhost:8084
-          predicates:
-            - Path=/api/tags/**
+            - Path=/api/tags/*/*
         - id: favorite
           uri: http://localhost:8085
           predicates:
@@ -77,6 +77,10 @@ spring:
           uri: http://localhost:8086
           predicates:
             - Path=/api/articles/*/comments/**
+        - id: proxy
+          uri: http://localhost:8089
+          predicates:
+           - Path=/api/**
 #        - id: tag-grpc
 #          uri: grpc://localhost:9094
 #          predicates:

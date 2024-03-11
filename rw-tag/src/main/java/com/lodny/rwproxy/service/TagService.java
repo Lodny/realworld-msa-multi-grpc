@@ -1,7 +1,7 @@
-package com.lodny.rwtag.service;
+package com.lodny.rwproxy.service;
 
-import com.lodny.rwtag.entity.Tag;
-import com.lodny.rwtag.repository.TagRepository;
+import com.lodny.rwproxy.entity.Tag;
+import com.lodny.rwproxy.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

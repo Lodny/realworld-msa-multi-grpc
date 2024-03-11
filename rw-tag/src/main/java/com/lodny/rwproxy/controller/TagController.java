@@ -1,9 +1,9 @@
-package com.lodny.rwtag.controller;
+package com.lodny.rwproxy.controller;
 
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
-import com.lodny.rwtag.entity.Tag;
-import com.lodny.rwtag.entity.wrapper.WrapTag10Response;
-import com.lodny.rwtag.service.TagService;
+import com.lodny.rwproxy.entity.Tag;
+import com.lodny.rwproxy.entity.wrapper.WrapTag10Response;
+import com.lodny.rwproxy.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

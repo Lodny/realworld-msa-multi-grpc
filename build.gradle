@@ -132,3 +132,9 @@ project(':rw-comment') {
         compileOnly project(':rw-common')
     }
 }
+
+project(':rw-proxy') {
+    dependencies {
+        compileOnly project(':rw-common')
+    }
+}

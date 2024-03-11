@@ -1,11 +1,10 @@
-package com.lodny.rwtag.grpc;
+package com.lodny.rwproxy.grpc;
 
 import com.google.protobuf.ProtocolStringList;
 import com.lodny.rwcommon.grpc.tag.Empty;
 import com.lodny.rwcommon.grpc.tag.RegisterTagsRequest;
-import com.lodny.rwtag.entity.Tag;
-import com.lodny.rwtag.repository.TagRepository;
-import com.lodny.rwtag.service.TagService;
+import com.lodny.rwproxy.entity.Tag;
+import com.lodny.rwproxy.repository.TagRepository;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

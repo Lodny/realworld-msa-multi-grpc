@@ -1,9 +1,8 @@
-package com.lodny.rwtag.repository;
+package com.lodny.rwproxy.repository;
 
-import com.lodny.rwtag.entity.Tag;
+import com.lodny.rwproxy.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 
 import java.util.List;
 import java.util.Set;

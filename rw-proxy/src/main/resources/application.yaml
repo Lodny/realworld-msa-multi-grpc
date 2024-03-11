@@ -1,0 +1,24 @@
+server:
+  port: 8089
+
+grpc:
+  client:
+    tag-grpc:
+      negotiation-type: plaintext
+      #      address: 'localhost:9090/grpc/tag'
+      #      address: 'static://localhost:9094/grpc/tag'
+      address: 'static://localhost:9094'
+
+spring:
+  application:
+    name: proxy
+  main:
+    allow-circular-references: true
+
+jwt:
+  header: Authorization
+  token-title: "Token "
+  secret: 231qwefopjvkjksflj2iocksdmv89iwseknr23fsd89ihrn23jhv98iuoxrj2389jhcisdkrjh2398
+  expiration-ms: 600_000_000 # 10 min
+
+
