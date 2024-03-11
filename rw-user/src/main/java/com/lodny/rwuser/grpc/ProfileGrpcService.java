@@ -5,6 +5,7 @@ import com.lodny.rwcommon.grpc.profile.GetProfileByUserIdResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwuser.entity.RealWorldUser;
 import com.lodny.rwuser.repository.UserRepository;
+import com.lodny.rwuser.service.FollowGrpcClient;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
 
     private final UserRepository userRepository;
+    private final FollowGrpcClient followGrpcClient;
 
     @Override
     public void getProfileByUserId(final GetProfileByUserIdRequest request,
@@ -26,11 +28,13 @@ public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
         log.info("getProfileByUserId() : foundUser={}", foundUser);
 
+        Boolean following = followGrpcClient.isFollowing(request.getUserId(), request.getFollowerId());
+
         GetProfileByUserIdResponse response = GetProfileByUserIdResponse.newBuilder()
                 .setUsername(foundUser.getUsername())
                 .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
                 .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
-                .setFollowing(false)
+                .setFollowing(following)
                 .build();
         log.info("getProfileByUserId() : response={}", response);
 

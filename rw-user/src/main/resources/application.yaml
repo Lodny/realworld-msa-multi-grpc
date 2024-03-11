@@ -3,9 +3,9 @@ server:
 
 grpc:
   client:
-    test:
+    follow-grpc:
       negotiation-type: plaintext
-      address: 'static://127.0.0.1:9097'
+      address: 'static://localhost:9092'
 
   server:
     port: 9091
