@@ -29,6 +29,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final RestTemplate restTemplate;
     private final JwtProperty jwtProperty;
+    private final TagGrpcClient tagGrpcClient;
 
     private HttpHeaders getHttpHeadersByToken(final String token) {
         log.info("getHttpHeadersByToken() : token={}", token);
@@ -51,8 +52,9 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(article);
         log.info("registerArticle() : savedArticle={}", savedArticle);
 
-        Integer result = registerTagsWithRestTemplate(registerArticleRequest.tagList(), savedArticle.getId(), loginInfo.getToken());
-        log.info("registerArticle() : result={}", result);
+//        Integer result = registerTagsWithRestTemplate(registerArticleRequest.tagList(), savedArticle.getId(), loginInfo.getToken());
+//        log.info("registerArticle() : result={}", result);
+        tagGrpcClient.registerTags(registerArticleRequest.tagList(), savedArticle.getId(), loginInfo.getToken());
 
         ProfileResponse profileResponse = getProfileByIdWithRestTemplate(savedArticle.getAuthorId(), loginInfo.getToken());
         log.info("registerArticle() : profileResponse={}", profileResponse);

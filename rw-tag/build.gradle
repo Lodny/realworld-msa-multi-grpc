@@ -1,6 +1,5 @@
 dependencies {
-    implementation project(':rw-common')
-
     implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
-    implementation files('libs/rpc-test-0.0.1-SNAPSHOT-plain.jar')
+    implementation files('../rw-common/libs/rw-common-1.0-SNAPSHOT-plain.jar')
+//    implementation files('../rw-common/build/libs/rw-common-1.0-SNAPSHOT-plain.jar')
 }

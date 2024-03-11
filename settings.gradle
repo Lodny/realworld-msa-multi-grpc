@@ -1,4 +1,4 @@
-rootProject.name = 'rw-msa-multi'
+rootProject.name = 'rw-msa-multi-grpc'
 include 'rw-common'
 include 'rw-user'
 include 'rw-follow'
@@ -6,5 +6,4 @@ include 'rw-article'
 include 'rw-tag'
 include 'rw-favorite'
 include 'rw-comment'
-include 'rw-grpc'
 

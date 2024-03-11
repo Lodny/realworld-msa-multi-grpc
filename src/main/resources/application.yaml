@@ -1,3 +1,7 @@
+#grpc:
+#  server:
+#    port: 9090
+
 spring:
   application:
     name: gateway
@@ -73,6 +77,12 @@ spring:
           uri: http://localhost:8086
           predicates:
             - Path=/api/articles/*/comments/**
+#        - id: tag-grpc
+#          uri: grpc://localhost:9094
+#          predicates:
+#            - Path=/grpc/tag/**
+#          filters:
+#            - RewritePath=/grpc/tags(?<segment>/?.*), /{segment}
 
 logging:
   level:

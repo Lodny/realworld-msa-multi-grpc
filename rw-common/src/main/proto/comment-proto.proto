@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.lodny.rwcommon.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.lodny.rwcommon.grpc.comment";
+
+service Comment {
+  rpc getComment (CommentRequest) returns (CommentResponse) {
+  }
+}
+
+message CommentRequest {
+  string name = 1;
+}
+
+message CommentResponse {
+  string message = 1;
+}

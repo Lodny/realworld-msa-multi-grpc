@@ -7,7 +7,7 @@ import com.lodny.rwarticle.entity.wrapper.WrapArticleResponse;
 import com.lodny.rwarticle.entity.wrapper.WrapArticleResponses;
 import com.lodny.rwarticle.entity.wrapper.WrapRegisterArticleRequest;
 import com.lodny.rwarticle.service.ArticleService;
-import com.lodny.rwarticle.service.GrpcClientService;
+import com.lodny.rwarticle.service.TagGrpcClient;
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
 import com.lodny.rwcommon.util.LoginInfo;
@@ -26,13 +26,6 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final GrpcClientService grpcClientService;
-
-    @GetMapping("/grpc/test")
-    public String testGrpc() {
-        log.info("testGrpc() : ");
-        return grpcClientService.sendMessage("juice");
-    }
 
     private String getTokenByLoginInfo(final LoginInfo loginInfo) {
         return loginInfo != null ? loginInfo.getToken() : "";

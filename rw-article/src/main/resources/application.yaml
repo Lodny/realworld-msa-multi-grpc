@@ -1,6 +1,17 @@
 server:
   port: 8083
 
+grpc:
+  client:
+    tag-grpc:
+      negotiation-type: plaintext
+      address: 'localhost:9090/grpc/tag'
+#      address: 'static://localhost:9094/grpc/tag'
+#      address: 'static://localhost:9094'
+
+  server:
+    port: 9093
+
 spring:
   application:
     name: article
@@ -34,8 +45,5 @@ jwt:
 logging:
   level:
     com.lodny.realworldmsaarticle.mapper: DEBUG
-grpc:
-  client:
-    test:
-      negotiation-type: plaintext
-      address: 'static://127.0.0.1:9097'
+
+

@@ -107,16 +107,16 @@ project(':rw-follow') {
 
 
 project(':rw-article') {
-    dependencies {
-        compileOnly project(':rw-common')
-    }
+//    dependencies {
+//        compileOnly project(':rw-common')
+//    }
 }
 
 
 project(':rw-tag') {
-    dependencies {
-        compileOnly project(':rw-common')
-    }
+//    dependencies {
+//        compileOnly project(':rw-common')
+//    }
 }
 
 
@@ -132,11 +132,3 @@ project(':rw-comment') {
         compileOnly project(':rw-common')
     }
 }
-
-
-
-// https://mvnrepository.com/artifact/net.devh/grpc-spring-boot-starter
-//    implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
-
-// https://mvnrepository.com/artifact/io.github.lognet/grpc-spring-boot-starter
-//    implementation 'io.github.lognet:grpc-spring-boot-starter:5.1.5'

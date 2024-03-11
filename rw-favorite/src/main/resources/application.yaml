@@ -1,6 +1,15 @@
 server:
   port: 8085
 
+grpc:
+  client:
+    test:
+      negotiation-type: plaintext
+      address: 'static://127.0.0.1:9097'
+
+  server:
+    port: 9095
+
 spring:
   application:
     name: favorite

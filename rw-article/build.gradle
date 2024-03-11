@@ -1,8 +1,16 @@
 dependencies {
-    implementation project(':rw-common')
-
     implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
+    implementation files('../rw-common/libs/rw-common-1.0-SNAPSHOT-plain.jar')
+
+//    implementation project(':rw-common')
+//    implementation files('../rw-common/build/libs/rw-common-1.0-SNAPSHOT-plain.jar')
 //    compileOnly 'jakarta.annotation:jakarta.annotation-api:1.3.5'
-    implementation files('libs/rpc-test-0.0.1-SNAPSHOT-plain.jar')
-//    implementation files('libs/rw-grpc-1.0-SNAPSHOT-plain.jar')
 }
+
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs += project(':rw-common').file('build/generated/source/proto').absolutePath
+//        }
+//    }
+//}
