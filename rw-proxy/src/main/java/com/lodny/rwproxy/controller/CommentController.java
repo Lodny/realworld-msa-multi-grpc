@@ -6,6 +6,7 @@ import com.lodny.rwcommon.grpc.comment.RegisterCommentResponse;
 import com.lodny.rwcommon.util.LoginInfo;
 import com.lodny.rwproxy.entity.dto.CommentResponse;
 import com.lodny.rwproxy.entity.dto.RegisterCommentRequest;
+import com.lodny.rwproxy.entity.wrapper.WrapCommentResponse;
 import com.lodny.rwproxy.entity.wrapper.WrapCommentResponses;
 import com.lodny.rwproxy.entity.wrapper.WrapRegisterCommentRequest;
 import com.lodny.rwproxy.service.CommentGrpcClient;
@@ -45,11 +46,10 @@ public class CommentController {
         Long articleId = commentGrpcClient.getArticleIdBySlug(slug);
         log.info("registerComment() : articleId={}", articleId);
 
-        RegisterCommentResponse response = commentGrpcClient.registerComment(articleId, registerCommentRequest.body(), loginInfo.getUserId());
-        log.info("registerComment() : response={}", response);
+        CommentResponse commentResponse = commentGrpcClient.registerComment(articleId, registerCommentRequest.body(), loginInfo.getUserId());
+        log.info("registerComment() : commentResponse={}", commentResponse);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapCommentResponse(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapCommentResponse(commentResponse));
     }
 
     @GetMapping("/comments")

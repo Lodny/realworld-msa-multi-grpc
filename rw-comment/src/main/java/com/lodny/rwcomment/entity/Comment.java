@@ -1,6 +1,5 @@
 package com.lodny.rwcomment.entity;
 
-import com.lodny.rwcomment.entity.dto.RegisterCommentRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,15 +31,15 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public static Comment of(final RegisterCommentRequest registerCommentRequest,
+    public static Comment of(final String body,
                              final Long articleId,
                              final Long authorId) {
-        Assert.hasText(registerCommentRequest.body(), "body 는 필수 입니다.");
+        Assert.hasText(body, "body 는 필수 입니다.");
         Assert.notNull(articleId, "articleId 는 필수입니다.");
         Assert.notNull(authorId, "articleId 는 필수입니다.");
 
         return Comment.builder()
-                .body(registerCommentRequest.body())
+                .body(body)
                 .articleId(articleId)
                 .authorId(authorId)
                 .build();

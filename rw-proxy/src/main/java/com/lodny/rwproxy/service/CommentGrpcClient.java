@@ -30,15 +30,35 @@ public class CommentGrpcClient {
     private ProfileGrpc.ProfileBlockingStub profileStub;
 
 
-    public RegisterCommentResponse registerComment(final Long articleId, final String body, final long authorId) {
-        RegisterCommentResponse response = commentStub.registerComment(RegisterCommentRequest.newBuilder()
+    public CommentResponse registerComment(final Long articleId, final String body, final long authorId) {
+        RegisterCommentResponse comment = commentStub.registerComment(RegisterCommentRequest.newBuilder()
                 .setArticleId(articleId)
                 .setAuthorId(authorId)
                 .setBody(body)
                 .build());
-        log.info("registerComment() : response={}", response);
+        log.info("registerComment() : comment={}", comment);
 
-        return response;
+        return getCommentResponse(authorId, comment);
+    }
+
+    private CommentResponse getCommentResponse(final long authorId, final RegisterCommentResponse comment) {
+        GetProfileByUserIdResponse profile = profileStub.getProfileByUserId(GetProfileByUserIdRequest.newBuilder()
+                .setUserId(comment.getAuthorId())
+                .setFollowerId(authorId)
+                .build());
+
+        ProfileResponse profileResponse = new ProfileResponse(
+                profile.getUsername(),
+                profile.getBio(),
+                profile.getImage(),
+                profile.getFollowing());
+
+        return new CommentResponse(
+                comment.getId(),
+                GrpcTimeUtil.toLocalDateTime(comment.getCreatedAt()),
+                GrpcTimeUtil.toLocalDateTime(comment.getUpdatedAt()),
+                comment.getBody(),
+                profileResponse);
     }
 
     public Long getArticleIdBySlug(final String slug) {
@@ -52,33 +72,14 @@ public class CommentGrpcClient {
     }
 
     public List<CommentResponse> getCommentsByArticleId(final Long articleId, final Long followerId) {
-        GetCommentsByArticleIdResponse response = commentStub.getCommentsByArticleId(
+        GetCommentsByArticleIdResponse comments = commentStub.getCommentsByArticleId(
                 GetCommentsByArticleIdRequest.newBuilder()
                         .setArticleId(articleId)
                         .build());
-        log.info("getCommentsByArticleId() : response={}", response);
+        log.info("getCommentsByArticleId() : comments={}", comments);
 
-        return response.getCommentsList().stream()
-                .map(comment -> {
-                    GetProfileByUserIdResponse profile = profileStub.getProfileByUserId(GetProfileByUserIdRequest.newBuilder()
-                            .setUserId(comment.getAuthorId())
-                            .setFollowerId(followerId)
-                            .build());
-
-                    ProfileResponse profileResponse = new ProfileResponse(
-                            profile.getUsername(),
-                            profile.getBio(),
-                            profile.getImage(),
-                            profile.getFollowing());
-
-                    return new CommentResponse(
-                            comment.getId(),
-                            GrpcTimeUtil.toLocalDateTime(comment.getCreatedAt()),
-                            GrpcTimeUtil.toLocalDateTime(comment.getUpdatedAt()),
-                            comment.getBody(),
-                            profileResponse
-                    );
-                })
+        return comments.getCommentsList().stream()
+                .map(comment -> getCommentResponse(followerId, comment))
                 .toList();
     }
 }
