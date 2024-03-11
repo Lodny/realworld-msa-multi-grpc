@@ -14,6 +14,9 @@ grpc:
     article-grpc:
       negotiation-type: plaintext
       address: 'static://localhost:9093'
+    profile-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9091'
 
 spring:
   application:

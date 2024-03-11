@@ -28,6 +28,10 @@ public class CommentController {
         return loginInfo != null ? loginInfo.getToken() : "";
     }
 
+    private Long getLoginIdByLoginInfo(final LoginInfo loginInfo) {
+        return loginInfo != null ? loginInfo.getUserId() : -1L;
+    }
+
     @JwtTokenRequired
     @PostMapping("/comments")
     public ResponseEntity<?> registerComment(@PathVariable final String slug,
@@ -57,8 +61,7 @@ public class CommentController {
         Long articleId = commentGrpcClient.getArticleIdBySlug(slug);
         log.info("registerComment() : articleId={}", articleId);
 
-//        List<CommentResponse> comments = commentService.getComments(slug, getTokenByLoginInfo(loginInfo));
-        List<CommentResponse> comments = commentGrpcClient.getCommentsByArticleId(articleId);
+        List<CommentResponse> comments = commentGrpcClient.getCommentsByArticleId(articleId, getLoginIdByLoginInfo(loginInfo));
         log.info("getComments() : comments={}", comments);
 
         return ResponseEntity.ok(new WrapCommentResponses(comments));

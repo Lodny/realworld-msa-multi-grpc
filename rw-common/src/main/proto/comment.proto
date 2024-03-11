@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "tag-proto.proto";
+import "tag.proto";
 
 package com.lodny.rwcommon.grpc;
 

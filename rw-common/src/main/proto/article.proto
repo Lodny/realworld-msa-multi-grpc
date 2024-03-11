@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "tag-proto.proto";
+import "tag.proto";
 
 package com.lodny.rwcommon.grpc;
 
@@ -9,9 +9,7 @@ option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.article";
 
 service Article {
-//  rpc registerComment (RegisterCommentRequest) returns (RegisterCommentResponse);
   rpc getArticleIdBySlug (GetArticleIdBySlugRequest) returns (GetArticleIdBySlugResponse);
-//  rpc deleteCommentById (DeleteCommentByIdRequest) returns (Empty);
 }
 
 
