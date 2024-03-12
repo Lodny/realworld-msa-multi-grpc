@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 //import "google/protobuf/timestamp.proto";
-//import "tag-proto.proto";
+import "profile.proto";
 
 package com.lodny.rwcommon.grpc;
 
@@ -9,15 +9,23 @@ option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.follow";
 
 service Follow {
-  rpc isFollowing (IsFollowingRequest) returns (IsFollowingResponse);
+  rpc isFollowing (GrpcIsFollowingRequest) returns (GrpcIsFollowingResponse);
+  rpc follow (GrpcFollowRequest) returns (GrpcProfileResponse);
+  rpc unfollow (GrpcFollowRequest) returns (GrpcProfileResponse);
 }
 
 
-message IsFollowingRequest {
+message GrpcIsFollowingRequest {
   uint64 followeeId = 1;
   uint64 followerId = 2;
 }
 
-message IsFollowingResponse {
+message GrpcIsFollowingResponse {
   bool following = 1;
+}
+
+
+message GrpcFollowRequest {
+  uint64 followeeId = 1;
+  uint64 followerId = 2;
 }

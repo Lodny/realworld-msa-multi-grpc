@@ -3,8 +3,8 @@ package com.lodny.rwarticle.grpc;
 import com.lodny.rwarticle.entity.Article;
 import com.lodny.rwarticle.repository.ArticleRepository;
 import com.lodny.rwcommon.grpc.article.ArticleGrpc;
-import com.lodny.rwcommon.grpc.article.GetArticleIdBySlugRequest;
-import com.lodny.rwcommon.grpc.article.GetArticleIdBySlugResponse;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugRequest;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugResponse;
 import com.lodny.rwcommon.grpc.tag.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +25,12 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
     private final ArticleRepository articleRepository;
 
     @Override
-    public void getArticleIdBySlug(final GetArticleIdBySlugRequest request, final StreamObserver<GetArticleIdBySlugResponse> responseObserver) {
+    public void getArticleIdBySlug(final GrpcGetArticleIdBySlugRequest request, final StreamObserver<GrpcGetArticleIdBySlugResponse> responseObserver) {
         Article foundArticle = articleRepository.findBySlug(request.getSlug())
                 .orElseThrow(() -> new IllegalArgumentException("article not found"));
         log.info("getArticleIdBySlug() : foundArticle={}", foundArticle);
 
-        GetArticleIdBySlugResponse response = GetArticleIdBySlugResponse.newBuilder()
+        GrpcGetArticleIdBySlugResponse response = GrpcGetArticleIdBySlugResponse.newBuilder()
                 .setArticleId(foundArticle.getId())
                 .build();
         log.info("getArticleIdBySlug() : response={}", response);
@@ -42,7 +42,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
 
 
     //    @Override
-//    public void registerTags(final RegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
+//    public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
 //        long articleId = request.getArticleId();
 //        log.info("registerTags() : articleId={}", articleId);
 //

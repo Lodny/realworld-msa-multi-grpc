@@ -20,22 +20,22 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
     private final CommentRepository commentRepository;
 
     @Override
-    public void registerComment(final RegisterCommentRequest request, final StreamObserver<RegisterCommentResponse> responseObserver) {
+    public void registerComment(final GrpcRegisterCommentRequest request, final StreamObserver<GrpcCommentResponse> responseObserver) {
         Comment comment = Comment.of(request.getBody(), request.getArticleId(), request.getAuthorId());
         log.info("registerComment() : comment={}", comment);
 
         Comment savedComment = commentRepository.save(comment);
         log.info("registerComment() : savedComment={}", savedComment);
 
-        RegisterCommentResponse response = getRegisterCommentResponse(savedComment);
+        GrpcCommentResponse response = getRegisterCommentResponse(savedComment);
         log.info("registerComment() : response={}", response);
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
-    private RegisterCommentResponse getRegisterCommentResponse(final Comment comment) {
-        return RegisterCommentResponse.newBuilder()
+    private GrpcCommentResponse getRegisterCommentResponse(final Comment comment) {
+        return GrpcCommentResponse.newBuilder()
                 .setId(comment.getId())
                 .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(comment.getCreatedAt()))
                 .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(comment.getUpdatedAt()))
@@ -45,12 +45,12 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
     }
 
     @Override
-    public void getCommentsByArticleId(final GetCommentsByArticleIdRequest request,
-                                       final StreamObserver<GetCommentsByArticleIdResponse> responseObserver) {
+    public void getCommentsByArticleId(final GrpcGetCommentsByArticleIdRequest request,
+                                       final StreamObserver<GrpcGetCommentsByArticleIdResponse> responseObserver) {
         List<Comment> comments = commentRepository.findAllByArticleIdOrderByCreatedAtDesc(request.getArticleId());
         log.info("getComments() : comments={}", comments);
 
-        GetCommentsByArticleIdResponse response = GetCommentsByArticleIdResponse.newBuilder()
+        GrpcGetCommentsByArticleIdResponse response = GrpcGetCommentsByArticleIdResponse.newBuilder()
                 .addAllComments(comments.stream()
                     .map(this::getRegisterCommentResponse)
                     .toList())
@@ -62,7 +62,7 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
     }
 
     @Override
-    public void deleteCommentById(final DeleteCommentByIdRequest request, final StreamObserver<Empty> responseObserver) {
+    public void deleteCommentById(final GrpcDeleteCommentByIdRequest request, final StreamObserver<Empty> responseObserver) {
         long commentId = request.getId();
         log.info("deleteCommentById() : commentId={}", commentId);
 

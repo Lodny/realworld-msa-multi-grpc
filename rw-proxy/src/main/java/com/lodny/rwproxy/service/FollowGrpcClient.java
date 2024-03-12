@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class TagGrpcClient {
+public class FollowGrpcClient {
 
     @GrpcClient("tag-grpc")
     private TagGrpc.TagBlockingStub tagBlockingStub;

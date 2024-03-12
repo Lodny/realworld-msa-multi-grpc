@@ -21,7 +21,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     private final TagRepository tagRepository;
 
     @Override
-    public void registerTags(final RegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
+    public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
         long articleId = request.getArticleId();
         log.info("registerTags() : articleId={}", articleId);
 
@@ -35,7 +35,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void getTopTagStrings(final TopTagStringsRequest request, final StreamObserver<TopTagStringsResponse> responseObserver) {
+    public void getTopTagStrings(final GrpcTopTagStringsRequest request, final StreamObserver<GrpcTopTagStringsResponse> responseObserver) {
         PageRequest pageRequest = PageRequest.of(0, request.getCount());
         log.info("getTopTagStrings() : pageRequest={}", pageRequest);
 
@@ -44,7 +44,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
                 .map(tag -> tag[0]).toList();
         log.info("getTopTagStrings() : topTags={}", topTags);
 
-        TopTagStringsResponse response = TopTagStringsResponse.newBuilder()
+        GrpcTopTagStringsResponse response = GrpcTopTagStringsResponse.newBuilder()
                 .addAllTags(topTags)
                 .build();
         log.info("getTopTagStrings() : response={}", response);
@@ -54,13 +54,13 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void getTagStringsByArticleId(final TagStringsByArticleIdRequest request, final StreamObserver<TagStringsByArticleIdResponse> responseObserver) {
+    public void getTagStringsByArticleId(final GrpcTagStringsByArticleIdRequest request, final StreamObserver<GrpcTagStringsByArticleIdResponse> responseObserver) {
         Set<String> tags = tagRepository.findAllByArticleId(request.getArticleId())
                 .stream().map(Tag::getTag)
                 .collect(Collectors.toSet());
         log.info("getTagsByArticleId() : tags={}", tags);
 
-        TagStringsByArticleIdResponse response = TagStringsByArticleIdResponse.newBuilder()
+        GrpcTagStringsByArticleIdResponse response = GrpcTagStringsByArticleIdResponse.newBuilder()
                 .addAllTags(tags)
                 .build();
         log.info("getTagStringsByArticleId() : response={}", response);
@@ -70,13 +70,13 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void getArticleIdsByTagString(final ArticleIdsByTagStringRequest request, final StreamObserver<ArticleIdsByTagStringResponse> responseObserver) {
+    public void getArticleIdsByTagString(final GrpcArticleIdsByTagStringRequest request, final StreamObserver<GrpcArticleIdsByTagStringResponse> responseObserver) {
         List<Long> articleIds = tagRepository.findAllByTag(request.getTagString())
                 .stream().map(Tag::getArticleId)
                 .toList();
         log.info("getArticleIdsByTagString() : articleIds={}", articleIds);
 
-        ArticleIdsByTagStringResponse response = ArticleIdsByTagStringResponse.newBuilder()
+        GrpcArticleIdsByTagStringResponse response = GrpcArticleIdsByTagStringResponse.newBuilder()
                 .addAllArticleId(articleIds)
                 .build();
         log.info("getArticleIdsByTagString() : response={}", response);
@@ -86,7 +86,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void deleteTagsByArticleId(final TagsByArticleIdRequest request, final StreamObserver<Empty> responseObserver) {
+    public void deleteTagsByArticleId(final GrpcTagsByArticleIdRequest request, final StreamObserver<Empty> responseObserver) {
         log.info("deleteTagsByArticleId() :");
 
         tagRepository.deleteAllByArticleId(request.getArticleId());

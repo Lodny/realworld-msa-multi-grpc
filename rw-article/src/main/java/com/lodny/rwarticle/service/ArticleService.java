@@ -179,6 +179,7 @@ public class ArticleService {
                 .map(article -> {
                     Set<String> tags = tagGrpcClient.getTagStringsByArticleId(article.getId());
                     ProfileResponse profileResponse = getProfileByIdWithRestTemplate(article.getAuthorId(), token);
+//                    ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginUserId);
                     Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(article.getId(), token);
                     return ArticleResponse.of(article, tags, profileResponse, favoriteInfo);
                 })

@@ -2,7 +2,6 @@ package com.lodny.rwproxy.controller;
 
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
-import com.lodny.rwcommon.grpc.comment.RegisterCommentResponse;
 import com.lodny.rwcommon.util.LoginInfo;
 import com.lodny.rwproxy.entity.dto.CommentResponse;
 import com.lodny.rwproxy.entity.dto.RegisterCommentRequest;

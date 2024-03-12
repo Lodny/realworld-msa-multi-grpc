@@ -9,19 +9,19 @@ option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.comment";
 
 service Comment {
-  rpc registerComment (RegisterCommentRequest) returns (RegisterCommentResponse);
-  rpc getCommentsByArticleId (GetCommentsByArticleIdRequest) returns (GetCommentsByArticleIdResponse);
-  rpc deleteCommentById (DeleteCommentByIdRequest) returns (Empty);
+  rpc registerComment (GrpcRegisterCommentRequest) returns (GrpcCommentResponse);
+  rpc getCommentsByArticleId (GrpcGetCommentsByArticleIdRequest) returns (GrpcGetCommentsByArticleIdResponse);
+  rpc deleteCommentById (GrpcDeleteCommentByIdRequest) returns (Empty);
 }
 
 
-message RegisterCommentRequest {
+message GrpcRegisterCommentRequest {
   uint64 authorId = 1;
   uint64 articleId = 2;
   string body = 3;
 }
 
-message RegisterCommentResponse {
+message GrpcCommentResponse {
   uint64 id = 1;
   google.protobuf.Timestamp createdAt = 2;
   google.protobuf.Timestamp updatedAt = 3;
@@ -30,16 +30,16 @@ message RegisterCommentResponse {
 }
 
 
-message GetCommentsByArticleIdRequest {
+message GrpcGetCommentsByArticleIdRequest {
   uint64 articleId = 1;
 }
 
-message GetCommentsByArticleIdResponse {
-  repeated RegisterCommentResponse comments = 1;
+message GrpcGetCommentsByArticleIdResponse {
+  repeated GrpcCommentResponse comments = 1;
 }
 
 
-message DeleteCommentByIdRequest {
+message GrpcDeleteCommentByIdRequest {
   uint64 id = 1;
   uint64 articleId = 2;
   uint64 authorId = 3;

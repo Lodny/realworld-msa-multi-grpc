@@ -19,7 +19,7 @@ public class TagGrpcClient {
     public void registerTags(final Set<String> tags, final Long articleId, final String token) {
         log.info("registerTags() : tags={}", tags);
 
-        tagBlockingStub.registerTags(RegisterTagsRequest.newBuilder()
+        tagBlockingStub.registerTags(GrpcRegisterTagsRequest.newBuilder()
                         .addAllTags(tags)
                         .setArticleId(articleId)
                         .build());
@@ -28,7 +28,7 @@ public class TagGrpcClient {
     public List<Long> getArticleIdsByTagString(final String tagString) {
         log.info("getArticleIdsByTag() : tagString={}", tagString);
 
-        ArticleIdsByTagStringResponse articleIdsByTagString = tagBlockingStub.getArticleIdsByTagString(ArticleIdsByTagStringRequest.newBuilder()
+        GrpcArticleIdsByTagStringResponse articleIdsByTagString = tagBlockingStub.getArticleIdsByTagString(GrpcArticleIdsByTagStringRequest.newBuilder()
                 .setTagString(tagString)
                 .build());
         log.info("getArticleIdsByTagString() : articleIdsByTagString={}", articleIdsByTagString);
@@ -37,7 +37,7 @@ public class TagGrpcClient {
     }
 
     public Set<String> getTagStringsByArticleId(final Long articleId) {
-        TagStringsByArticleIdResponse response = tagBlockingStub.getTagStringsByArticleId(TagStringsByArticleIdRequest.newBuilder()
+        GrpcTagStringsByArticleIdResponse response = tagBlockingStub.getTagStringsByArticleId(GrpcTagStringsByArticleIdRequest.newBuilder()
                 .setArticleId(articleId).build());
         log.info("getTagStringsByArticleId() : response={}", response);
 

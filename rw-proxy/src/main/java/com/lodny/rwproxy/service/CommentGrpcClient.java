@@ -1,11 +1,11 @@
 package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.article.ArticleGrpc;
-import com.lodny.rwcommon.grpc.article.GetArticleIdBySlugRequest;
-import com.lodny.rwcommon.grpc.article.GetArticleIdBySlugResponse;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugRequest;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugResponse;
 import com.lodny.rwcommon.grpc.comment.*;
-import com.lodny.rwcommon.grpc.profile.GetProfileByUserIdRequest;
-import com.lodny.rwcommon.grpc.profile.GetProfileByUserIdResponse;
+import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
+import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwcommon.grpc.tag.Empty;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
@@ -32,7 +32,7 @@ public class CommentGrpcClient {
 
 
     public CommentResponse registerComment(final Long articleId, final String body, final long authorId) {
-        RegisterCommentResponse comment = commentStub.registerComment(RegisterCommentRequest.newBuilder()
+        GrpcCommentResponse comment = commentStub.registerComment(GrpcRegisterCommentRequest.newBuilder()
                 .setArticleId(articleId)
                 .setAuthorId(authorId)
                 .setBody(body)
@@ -42,8 +42,8 @@ public class CommentGrpcClient {
         return getCommentResponse(authorId, comment);
     }
 
-    private CommentResponse getCommentResponse(final long authorId, final RegisterCommentResponse comment) {
-        GetProfileByUserIdResponse profile = profileStub.getProfileByUserId(GetProfileByUserIdRequest.newBuilder()
+    private CommentResponse getCommentResponse(final long authorId, final GrpcCommentResponse comment) {
+        GrpcProfileResponse profile = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
                 .setUserId(comment.getAuthorId())
                 .setFollowerId(authorId)
                 .build());
@@ -63,8 +63,8 @@ public class CommentGrpcClient {
     }
 
     public Long getArticleIdBySlug(final String slug) {
-        GetArticleIdBySlugResponse response = articleStub.getArticleIdBySlug(
-                GetArticleIdBySlugRequest.newBuilder()
+        GrpcGetArticleIdBySlugResponse response = articleStub.getArticleIdBySlug(
+                GrpcGetArticleIdBySlugRequest.newBuilder()
                         .setSlug(slug)
                         .build());
         log.info("getArticleIdBySlug() : response={}", response);
@@ -73,8 +73,8 @@ public class CommentGrpcClient {
     }
 
     public List<CommentResponse> getCommentsByArticleId(final Long articleId, final Long followerId) {
-        GetCommentsByArticleIdResponse comments = commentStub.getCommentsByArticleId(
-                GetCommentsByArticleIdRequest.newBuilder()
+        GrpcGetCommentsByArticleIdResponse comments = commentStub.getCommentsByArticleId(
+                GrpcGetCommentsByArticleIdRequest.newBuilder()
                         .setArticleId(articleId)
                         .build());
         log.info("getCommentsByArticleId() : comments={}", comments);
@@ -87,7 +87,7 @@ public class CommentGrpcClient {
     public void deleteComment(final Long articleId, final Long commentId, final long userId) {
         log.info("deleteComment() : articleId={}", articleId);
 
-        Empty empty = commentStub.deleteCommentById(DeleteCommentByIdRequest.newBuilder()
+        Empty empty = commentStub.deleteCommentById(GrpcDeleteCommentByIdRequest.newBuilder()
                 .setId(commentId)
                 .build());
         log.info("deleteComment() : empty={}", empty);

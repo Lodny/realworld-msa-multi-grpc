@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class TagProxyController {
+public class TagController {
 
     private final TagGrpcClient tagGrpcClient;
 
