@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package com.lodny.rwcommon.grpc;
+
+option java_package = "com.lodny.rwcommon.grpc.common";
+
+message Empty {}

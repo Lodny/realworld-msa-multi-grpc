@@ -55,7 +55,7 @@ public class ArticleController {
         log.info("getArticleBySlug() : slug={}", slug);
         log.info("getArticleBySlug() : loginInfo={}", loginInfo);
 
-        ArticleResponse articleResponse = articleService.getArticleBySlug(slug, getTokenByLoginInfo(loginInfo));
+        ArticleResponse articleResponse = articleService.getArticleBySlug(slug, getTokenByLoginInfo(loginInfo), getLoginUserId(loginInfo));
         log.info("getArticleBySlug() : articleResponse={}", articleResponse);
 
         return ResponseEntity.ok(new WrapArticleResponse(articleResponse));

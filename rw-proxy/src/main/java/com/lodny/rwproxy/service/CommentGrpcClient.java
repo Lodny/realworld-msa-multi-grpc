@@ -4,10 +4,10 @@ import com.lodny.rwcommon.grpc.article.ArticleGrpc;
 import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugRequest;
 import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugResponse;
 import com.lodny.rwcommon.grpc.comment.*;
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
-import com.lodny.rwcommon.grpc.tag.Empty;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
 import com.lodny.rwproxy.entity.dto.CommentResponse;
 import com.lodny.rwproxy.entity.dto.ProfileResponse;
@@ -87,7 +87,7 @@ public class CommentGrpcClient {
     public void deleteComment(final Long articleId, final Long commentId, final long userId) {
         log.info("deleteComment() : articleId={}", articleId);
 
-        Empty empty = commentStub.deleteCommentById(GrpcDeleteCommentByIdRequest.newBuilder()
+        Common.Empty empty = commentStub.deleteCommentById(GrpcDeleteCommentByIdRequest.newBuilder()
                 .setId(commentId)
                 .build());
         log.info("deleteComment() : empty={}", empty);

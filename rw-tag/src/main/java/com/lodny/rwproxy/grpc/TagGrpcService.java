@@ -1,5 +1,7 @@
 package com.lodny.rwproxy.grpc;
 
+import com.google.protobuf.Empty;
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.tag.*;
 import com.lodny.rwproxy.entity.Tag;
 import com.lodny.rwproxy.repository.TagRepository;
@@ -21,7 +23,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     private final TagRepository tagRepository;
 
     @Override
-    public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
+    public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Common.Empty> responseObserver) {
         long articleId = request.getArticleId();
         log.info("registerTags() : articleId={}", articleId);
 
@@ -30,7 +32,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
                         .map(tag -> new Tag(articleId, tag))
                         .toList());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onNext(Common.Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 
@@ -86,12 +88,12 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void deleteTagsByArticleId(final GrpcTagsByArticleIdRequest request, final StreamObserver<Empty> responseObserver) {
+    public void deleteTagsByArticleId(final GrpcTagsByArticleIdRequest request, final StreamObserver<Common.Empty> responseObserver) {
         log.info("deleteTagsByArticleId() :");
 
         tagRepository.deleteAllByArticleId(request.getArticleId());
 
-        responseObserver.onNext(Empty.getDefaultInstance());
+        responseObserver.onNext(Common.Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 }

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.lodny.rwcommon.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.lodny.rwcommon.grpc.rwuser";
+
+service RwUser {
+  rpc getUserIdByUsername (GrpcGetUserIdByUsernameRequest) returns (GrpcGetUserIdByUsernameResponse);
+}
+
+
+message GrpcGetUserIdByUsernameRequest {
+  string username = 1;
+}
+
+message GrpcGetUserIdByUsernameResponse {
+  uint64 userId = 1;
+}

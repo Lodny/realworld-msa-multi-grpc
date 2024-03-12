@@ -3,6 +3,8 @@ package com.lodny.rwproxy.controller;
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
 import com.lodny.rwcommon.util.LoginInfo;
+import com.lodny.rwproxy.entity.dto.ProfileResponse;
+import com.lodny.rwproxy.entity.wrapper.WrapProfileResponse;
 import com.lodny.rwproxy.service.FollowGrpcClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,18 +23,18 @@ public class FollowController {
 
 //    private static final String API_URL = "http://localhost:8080/api";
 
-//    @JwtTokenRequired
-//    @PostMapping("/profiles/{username}/follow")
-//    public ResponseEntity<?> follow(@PathVariable final String username,
-//                                    @LoginUser final LoginInfo loginInfo) {
-//        log.info("follow() : username={}", username);
-//        log.info("follow() : loginInfo={}", loginInfo);
-//
-//        WrapProfileResponse wrapProfileResponse = followService.follow(username, loginInfo.getUserId(), loginInfo.getToken());
-//        log.info("follow() : wrapProfileResponse.profile()={}", wrapProfileResponse.profile());
-//
-//        return ResponseEntity.ok(wrapProfileResponse);
-//    }
+    @JwtTokenRequired
+    @PostMapping("/profiles/{username}/follow")
+    public ResponseEntity<?> follow(@PathVariable final String username,
+                                    @LoginUser final LoginInfo loginInfo) {
+        log.info("follow() : username={}", username);
+        log.info("follow() : loginInfo={}", loginInfo);
+
+        ProfileResponse profileResponse = followGrpcClient.follow(username, loginInfo.getUserId());
+        log.info("follow() : profileResponse={}", profileResponse);
+
+        return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
+    }
 
 //    @JwtTokenRequired
 //    @DeleteMapping("/profiles/{username}/follow")

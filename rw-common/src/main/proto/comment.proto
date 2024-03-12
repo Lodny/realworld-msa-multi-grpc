@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-import "tag.proto";
-
 package com.lodny.rwcommon.grpc;
+
+import "google/protobuf/timestamp.proto";
+import "common.proto";
 
 option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.comment";

@@ -1,8 +1,5 @@
 syntax = "proto3";
 
-//import "google/protobuf/timestamp.proto";
-//import "tag-proto.proto";
-
 package com.lodny.rwcommon.grpc;
 
 option java_multiple_files = true;
@@ -10,6 +7,7 @@ option java_package = "com.lodny.rwcommon.grpc.profile";
 
 service Profile {
   rpc getProfileByUserId (GrpcProfileByUserIdRequest) returns (GrpcProfileResponse);
+  rpc getProfileByUsername (GrpcProfileByUsernameRequest) returns (GrpcProfileResponse);
 }
 
 
@@ -23,4 +21,10 @@ message GrpcProfileResponse {
   string bio = 2;
   string image = 3;
   bool following = 4;
+}
+
+
+message GrpcProfileByUsernameRequest {
+  string username = 1;
+  uint64 followerId = 2;
 }

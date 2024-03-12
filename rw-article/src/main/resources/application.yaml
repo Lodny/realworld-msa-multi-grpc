@@ -8,6 +8,9 @@ grpc:
 #      address: 'localhost:9090/grpc/tag'
 #      address: 'static://localhost:9094/grpc/tag'
       address: 'static://localhost:9094'
+    profile-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9091'
 
   server:
     port: 9093

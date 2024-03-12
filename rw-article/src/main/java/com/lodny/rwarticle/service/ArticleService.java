@@ -30,6 +30,7 @@ public class ArticleService {
     private final RestTemplate restTemplate;
     private final JwtProperty jwtProperty;
     private final TagGrpcClient tagGrpcClient;
+    private final ProfileGrpcClient profileGrpcClient;
 
     private HttpHeaders getHttpHeadersByToken(final String token) {
         log.info("getHttpHeadersByToken() : token={}", token);
@@ -54,7 +55,8 @@ public class ArticleService {
 
         tagGrpcClient.registerTags(registerArticleRequest.tagList(), savedArticle.getId(), loginInfo.getToken());
 
-        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(savedArticle.getAuthorId(), loginInfo.getToken());
+//        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(savedArticle.getAuthorId(), loginInfo.getToken());
+        ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginInfo.getUserId());
         log.info("registerArticle() : profileResponse={}", profileResponse);
 
         return ArticleResponse.of(
@@ -178,8 +180,8 @@ public class ArticleService {
         List<ArticleResponse> articleResponses = articlePage.getContent().stream()
                 .map(article -> {
                     Set<String> tags = tagGrpcClient.getTagStringsByArticleId(article.getId());
-                    ProfileResponse profileResponse = getProfileByIdWithRestTemplate(article.getAuthorId(), token);
-//                    ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginUserId);
+//                    ProfileResponse profileResponse = getProfileByIdWithRestTemplate(article.getAuthorId(), token);
+                    ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginUserId);
                     Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(article.getId(), token);
                     return ArticleResponse.of(article, tags, profileResponse, favoriteInfo);
                 })
@@ -212,7 +214,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponse getArticleBySlug(final String slug, final String token) {
+    public ArticleResponse getArticleBySlug(final String slug, final String token, final long loginUserId) {
         log.info("getArticleBySlug() : token={}", token);
         Article foundArticle = articleRepository.findBySlug(slug)
                 .orElseThrow(() -> new IllegalArgumentException("article not found"));
@@ -220,7 +222,8 @@ public class ArticleService {
 
         Set<String> tags = tagGrpcClient.getTagStringsByArticleId(foundArticle.getId());
         log.info("getArticleBySlug() : tags={}", tags);
-        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(foundArticle.getAuthorId(), token);
+//        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(foundArticle.getAuthorId(), token);
+        ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(foundArticle.getAuthorId(), loginUserId);
         log.info("getArticleBySlug() : profileResponse={}", profileResponse);
         Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(foundArticle.getId(), token);
         log.info("getArticleBySlug() : favoriteInfo={}", favoriteInfo);
