@@ -28,22 +28,17 @@ public class FollowGrpcClient {
     private RwUserGrpc.RwUserBlockingStub userStub;
 
 
-    public ProfileResponse follow(final String username, final long followerId) {
-        log.info("follow() : followerId={}", followerId);
-
+    private long getFolloweeId(final String username) {
         GrpcGetUserIdByUsernameResponse userIdByUsername = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
                 .setUsername(username)
                 .build());
-        log.info("follow() : userIdByUsername={}", userIdByUsername);
 
-        Common.Empty empty = followStub.follow(GrpcFollowRequest.newBuilder()
-                .setFolloweeId(userIdByUsername.getUserId())
-                .setFollowerId(followerId)
-                .build());
-        log.info("follow() : empty={}", empty);
+        return userIdByUsername.getUserId();
+    }
 
+    private ProfileResponse getProfileResponse(final long followerId, final long followeeId) {
         GrpcProfileResponse grpcProfile = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
-                .setUserId(userIdByUsername.getUserId())
+                .setUserId(followeeId)
                 .setFollowerId(followerId)
                 .build());
 
@@ -52,5 +47,35 @@ public class FollowGrpcClient {
                 grpcProfile.getBio(),
                 grpcProfile.getImage(),
                 grpcProfile.getFollowing());
+    }
+
+    public ProfileResponse follow(final String username, final long followerId) {
+        log.info("follow() : followerId={}", followerId);
+
+        long followeeId = getFolloweeId(username);
+        log.info("follow() : followeeId={}", followeeId);
+
+        Common.Empty empty = followStub.follow(GrpcFollowRequest.newBuilder()
+                .setFolloweeId(followeeId)
+                .setFollowerId(followerId)
+                .build());
+        log.info("follow() : empty={}", empty);
+
+        return getProfileResponse(followerId, followeeId);
+    }
+
+    public ProfileResponse unfollow(final String username, final long followerId) {
+        log.info("unfollow() : followerId={}", followerId);
+
+        long followeeId = getFolloweeId(username);
+        log.info("unfollow() : followeeId={}", followeeId);
+
+        Common.Empty empty = followStub.unfollow(GrpcFollowRequest.newBuilder()
+                .setFolloweeId(followeeId)
+                .setFollowerId(followerId)
+                .build());
+        log.info("unfollow() : empty={}", empty);
+
+        return getProfileResponse(followerId, followeeId);
     }
 }

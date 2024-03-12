@@ -36,32 +36,20 @@ public class FollowController {
         return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
     }
 
-//    @JwtTokenRequired
-//    @DeleteMapping("/profiles/{username}/follow")
-//    public ResponseEntity<?> unfollow(@PathVariable final String username,
-//                                      @LoginUser final LoginInfo loginInfo) {
-//        log.info("unfollow() : username={}", username);
-//        log.info("unfollow() : loginInfo={}", loginInfo);
-//
-//        WrapProfileResponse wrapProfileResponse = followService.unfollow(username, loginInfo.getUserId(), loginInfo.getToken());
-//        log.info("unfollow() : wrapProfileResponse.profile()={}", wrapProfileResponse.profile());
-//
-//        return ResponseEntity.ok(wrapProfileResponse);
-//    }
-//
-//    @JwtTokenRequired
-//    @GetMapping("/profiles/{username}/follow")
-//    public ResponseEntity<?> isFollow(@PathVariable final String username,
-//                                      @LoginUser final LoginInfo loginInfo) {
-//        log.info("isFollow() : username={}", username);
-//        log.info("isFollow() : loginInfo={}", loginInfo);
-//
-//        Boolean following = followService.isFollow(username, loginInfo.getUserId(), loginInfo.getToken());
-//        log.info("isFollow() : following={}", following);
-//
-//        return ResponseEntity.ok(following);
-//    }
-//
+    @JwtTokenRequired
+    @DeleteMapping("/profiles/{username}/follow")
+    public ResponseEntity<?> unfollow(@PathVariable final String username,
+                                      @LoginUser final LoginInfo loginInfo) {
+        log.info("unfollow() : username={}", username);
+        log.info("unfollow() : loginInfo={}", loginInfo);
+
+        ProfileResponse profileResponse = followGrpcClient.unfollow(username, loginInfo.getUserId());
+        log.info("unfollow() : profileResponse={}", profileResponse);
+
+        return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
+    }
+
+
 //    @JwtTokenRequired
 //    @GetMapping("/follow/followee-list")
 //    public ResponseEntity<?> getFollowees(@LoginUser final LoginInfo loginInfo) {

@@ -38,19 +38,4 @@ public class ProfileController {
 
         return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
     }
-
-//    @GetMapping("/by-id/{id}")
-//    public ResponseEntity<?> getProfileById(@PathVariable final Long id,
-//                                            @LoginUser final LoginInfo loginInfo) {
-//        log.info("getProfileById() : id={}", id);
-//        log.info("getProfileById() : loginInfo={}", loginInfo);
-//
-//        UserResponse loginUser = (loginInfo != null) ? (UserResponse)loginInfo.getUserResponse() : null;
-//
-//        ProfileResponse profileResponse = profileService.getProfileById(id, loginUser);
-//        profileResponse.setImage(ImageUtil.nullToDefaultImage(profileResponse.getImage()));
-//        log.info("getProfileById() : profileResponse={}", profileResponse);
-//
-//        return ResponseEntity.ok(profileResponse);
-//    }
 }
