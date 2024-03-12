@@ -1,11 +1,7 @@
 package com.lodny.rwfollow.grpc;
 
 import com.lodny.rwcommon.grpc.common.Common;
-import com.lodny.rwcommon.grpc.follow.FollowGrpc;
-import com.lodny.rwcommon.grpc.follow.GrpcFollowRequest;
-import com.lodny.rwcommon.grpc.follow.GrpcIsFollowingRequest;
-import com.lodny.rwcommon.grpc.follow.GrpcIsFollowingResponse;
-import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
+import com.lodny.rwcommon.grpc.follow.*;
 import com.lodny.rwfollow.entity.Follow;
 import com.lodny.rwfollow.entity.FollowId;
 import com.lodny.rwfollow.repository.FollowRepository;
@@ -13,6 +9,8 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
+
+import java.util.List;
 
 @Slf4j
 @GrpcService
@@ -55,6 +53,26 @@ public class FollowGrpcService extends FollowGrpc.FollowImplBase {
         followRepository.deleteById(followId);
 
         responseObserver.onNext(Common.Empty.getDefaultInstance());
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getFolloweeIdsByFollowerId(final GrpcFollowerIdRequest request,
+                                           final StreamObserver<GrpcFolloweeIdsResponse> responseObserver) {
+        long followerId = request.getFollowerId();
+        log.info("getFolloweeIdsByFollowerId() : followerId={}", followerId);
+
+        List<Long> followees = followRepository.findAllByIdFollowerId(followerId).stream()
+                .map(follow -> follow.getId().getFolloweeId())
+                .toList();
+        log.info("getFolloweeIdsByFollowerId() : followees={}", followees);
+
+        GrpcFolloweeIdsResponse response = GrpcFolloweeIdsResponse.newBuilder()
+                .addAllFolloweeId(followees)
+                .build();
+        log.info("getFolloweeIdsByFollowerId() : response={}", response);
+
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 }

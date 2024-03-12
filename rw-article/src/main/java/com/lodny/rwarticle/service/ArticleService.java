@@ -29,8 +29,10 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final RestTemplate restTemplate;
     private final JwtProperty jwtProperty;
+
     private final TagGrpcClient tagGrpcClient;
     private final ProfileGrpcClient profileGrpcClient;
+    private final FollowGrpcClient followGrpcClient;
 
     private HttpHeaders getHttpHeadersByToken(final String token) {
         log.info("getHttpHeadersByToken() : token={}", token);
@@ -55,7 +57,6 @@ public class ArticleService {
 
         tagGrpcClient.registerTags(registerArticleRequest.tagList(), savedArticle.getId(), loginInfo.getToken());
 
-//        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(savedArticle.getAuthorId(), loginInfo.getToken());
         ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginInfo.getUserId());
         log.info("registerArticle() : profileResponse={}", profileResponse);
 
@@ -146,7 +147,7 @@ public class ArticleService {
     public Page<ArticleResponse> getFeedArticles(final PageRequest pageRequest, final String token, final Long loginUserId) {
         log.info("getFeedArticles() : loginUserId={}", loginUserId);
 
-        List<Long> followeeIds = getFolloweeIdsByFollowerIdWithRestTemplate(token);
+        List<Long> followeeIds = followGrpcClient.getFolloweeIdsByFollowerId(loginUserId);
         log.info("getFeedArticles() : followeeIds={}", followeeIds);
         //todo::orderby
 
@@ -156,31 +157,10 @@ public class ArticleService {
         return getArticleResponses(articlePage, loginUserId, token);
     }
 
-    private List<Long> getFolloweeIdsByFollowerIdWithRestTemplate(final String token) {
-        ResponseEntity<List> response = restTemplate.exchange(
-                "http://localhost:8080/api/follow/followee-list",
-                HttpMethod.GET,
-                new HttpEntity<String>(getHttpHeadersByToken(token)),
-                List.class);
-
-        return response.getBody();
-    }
-
-    private Integer registerTagsWithRestTemplate(final Set<String> tags, final Long articleId, final String token) {
-        ResponseEntity<Integer> response = restTemplate.exchange(
-                "http://localhost:8080/api/articles/" + articleId + "/tags/list",
-                HttpMethod.POST,
-                new HttpEntity<>(tags, getHttpHeadersByToken(token)),
-                Integer.class);
-
-        return response.getBody();
-    }
-
     private Page<ArticleResponse> getArticleResponses(final Page<Article> articlePage, final Long loginUserId, final String token) {
         List<ArticleResponse> articleResponses = articlePage.getContent().stream()
                 .map(article -> {
                     Set<String> tags = tagGrpcClient.getTagStringsByArticleId(article.getId());
-//                    ProfileResponse profileResponse = getProfileByIdWithRestTemplate(article.getAuthorId(), token);
                     ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginUserId);
                     Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(article.getId(), token);
                     return ArticleResponse.of(article, tags, profileResponse, favoriteInfo);
@@ -190,19 +170,6 @@ public class ArticleService {
         log.info("getArticleResponses() : articleResponses={}", articleResponses);
 
         return new PageImpl<>(articleResponses, articlePage.getPageable(), articlePage.getTotalElements());
-    }
-
-    private ProfileResponse getProfileByIdWithRestTemplate(final Long authorId, final String token) {
-        log.info("getProfileByIdWithRestTemplate() : authorId={}", authorId);
-        log.info("getProfileByIdWithRestTemplate() : token={}", token);
-
-        ResponseEntity<ProfileResponse> response = restTemplate.exchange(
-                "http://localhost:8080/api/profiles/by-id/" + authorId,
-                HttpMethod.GET,
-                new HttpEntity<String>(getHttpHeadersByToken(token)),
-                ProfileResponse.class);
-
-        return response.getBody();
     }
 
     public Long getArticleIdBySlug(final String slug) {
@@ -222,7 +189,6 @@ public class ArticleService {
 
         Set<String> tags = tagGrpcClient.getTagStringsByArticleId(foundArticle.getId());
         log.info("getArticleBySlug() : tags={}", tags);
-//        ProfileResponse profileResponse = getProfileByIdWithRestTemplate(foundArticle.getAuthorId(), token);
         ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(foundArticle.getAuthorId(), loginUserId);
         log.info("getArticleBySlug() : profileResponse={}", profileResponse);
         Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(foundArticle.getId(), token);

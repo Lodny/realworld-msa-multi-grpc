@@ -11,6 +11,7 @@ service Follow {
   rpc isFollowing (GrpcIsFollowingRequest) returns (GrpcIsFollowingResponse);
   rpc follow (GrpcFollowRequest) returns (Empty);
   rpc unfollow (GrpcFollowRequest) returns (Empty);
+  rpc getFolloweeIdsByFollowerId (GrpcFollowerIdRequest) returns (GrpcFolloweeIdsResponse);
 }
 
 
@@ -27,4 +28,13 @@ message GrpcIsFollowingResponse {
 message GrpcFollowRequest {
   uint64 followeeId = 1;
   uint64 followerId = 2;
+}
+
+
+message GrpcFollowerIdRequest {
+  uint64 followerId = 1;
+}
+
+message GrpcFolloweeIdsResponse {
+  repeated uint64 followeeId = 1;
 }

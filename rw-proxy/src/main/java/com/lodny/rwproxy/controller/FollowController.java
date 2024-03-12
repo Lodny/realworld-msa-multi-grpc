@@ -48,16 +48,4 @@ public class FollowController {
 
         return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
     }
-
-
-//    @JwtTokenRequired
-//    @GetMapping("/follow/followee-list")
-//    public ResponseEntity<?> getFollowees(@LoginUser final LoginInfo loginInfo) {
-//        log.info("getFollowees() : loginInfo={}", loginInfo);
-//
-//        List<Long> followees = followService.getFollowees(loginInfo.getUserId());
-//        log.info("getFollowees() : followees={}", followees);
-//
-//        return ResponseEntity.ok(followees);
-//    }
 }
