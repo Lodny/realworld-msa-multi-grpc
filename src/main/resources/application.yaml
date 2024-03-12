@@ -25,14 +25,6 @@ spring:
           uri: http://localhost:8089
           predicates:
             - Path=/api/articles/*/favorite
-#        - id: proxy
-#          uri: http://localhost:8089
-#          predicates:
-#            - Path=/api/articles/*/favorite-info
-#        - id: proxy
-#          uri: http://localhost:8089
-#          predicates:
-#            - Path=/api/favorite/*/article-ids
         - id: proxy
           uri: http://localhost:8089
           predicates:

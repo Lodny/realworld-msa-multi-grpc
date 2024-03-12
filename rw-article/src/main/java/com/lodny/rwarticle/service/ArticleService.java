@@ -126,7 +126,7 @@ public class ArticleService {
         final Long favoriteUserId = getUserIdByUsernameWithRestTemplate(favoriteUser, token);
         log.info("getArticlesByFavorited() : favoriteUserId={}", favoriteUserId);
 
-        List<Long> articleIds = getArticleIdsByFavoriteWithRestTemplate(favoriteUserId, token);
+        List<Long> articleIds = favoriteGrpcClient.getFavoriteArticleIdsByUserId(favoriteUserId);
         log.info("getArticlesByFavorited() : articleIds={}", articleIds);
 
         Page<Article> articlePage = articleRepository.findAllByIdInOrderByCreatedAtDesc(articleIds, pageRequest);
@@ -134,17 +134,6 @@ public class ArticleService {
 
         return getArticleResponses(articlePage, loginUserId, token);
     }
-
-    private List<Long> getArticleIdsByFavoriteWithRestTemplate(final Long favoriteUserId, final String token) {
-        ResponseEntity<List> response = restTemplate.exchange(
-                "http://localhost:8080/api/favorite/" + favoriteUserId + "/article-ids",
-                HttpMethod.GET,
-                new HttpEntity<String>(getHttpHeadersByToken(token)),
-                List.class);
-
-        return response.getBody();
-    }
-
 
     public Page<ArticleResponse> getFeedArticles(final PageRequest pageRequest, final String token, final Long loginUserId) {
         log.info("getFeedArticles() : loginUserId={}", loginUserId);

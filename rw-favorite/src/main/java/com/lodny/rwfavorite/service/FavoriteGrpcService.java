@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+import java.util.List;
+
 @Slf4j
 @GrpcService
 @RequiredArgsConstructor
@@ -51,6 +53,16 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
 
     @Override
     public void getFavoriteArticleIdsByUserId(final GrpcUserIdRequest request, final StreamObserver<GrpcGetFavoriteArticleIdsResponse> responseObserver) {
-        log.info("getFavoriteArticleIdsByUserId() : 1={}", 1);
+        List<Long> articleIds = favoriteRepository.findAllByIdUserId(request.getUserId())
+                .stream().map(favorite -> favorite.getId().getArticleId()).toList();
+        log.info("getFavoriteArticleIdsByUserId() : articleIds={}", articleIds);
+
+        GrpcGetFavoriteArticleIdsResponse response = GrpcGetFavoriteArticleIdsResponse.newBuilder()
+                .addAllArticleId(articleIds)
+                .build();
+        log.info("getFavoriteArticleIdsByUserId() : response={}", response);
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

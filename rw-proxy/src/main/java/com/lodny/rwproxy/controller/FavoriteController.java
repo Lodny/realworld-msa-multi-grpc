@@ -55,28 +55,5 @@ public class FavoriteController {
 //
 //        return ResponseEntity.ok(wrapArticleResponse);
 //    }
-//
-//    @GetMapping("/articles/{articleId}/favorite-info")
-//    public ResponseEntity<?> favoriteInfo(@PathVariable final Long articleId,
-//                                          @LoginUser final LoginInfo loginInfo) {
-//        log.info("favoriteInfo() : articleId={}", articleId);
-//        log.info("favoriteInfo() : loginInfo={}", loginInfo);
-//
-//        Long[] favoriteInfo = favoriteService.favoriteInfo(articleId, getLoginUserId(loginInfo));
-//        log.info("favoriteInfo() : favoriteInfo={}", favoriteInfo);
-//
-//        return ResponseEntity.ok(favoriteInfo);
-//    }
-//
-//    @GetMapping("/favorite/{userId}/article-ids")
-//    public ResponseEntity<?> getArticleIdsByUserid(@PathVariable final Long userId,
-//                                                   @LoginUser final LoginInfo loginInfo) {
-//        log.info("getArticleIdsByUserid() : userId={}", userId);
-//        log.info("favoriteInfo() : loginInfo={}", loginInfo);
-//
-//        List<Long> articleIds = favoriteService.getArticleIdsByUserid(userId);
-//        log.info("getArticleIdsByUserid() : articleIds={}", articleIds);
-//
-//        return ResponseEntity.ok(articleIds);
-//    }
+
 }

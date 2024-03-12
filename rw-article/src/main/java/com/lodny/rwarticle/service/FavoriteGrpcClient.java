@@ -1,11 +1,11 @@
 package com.lodny.rwarticle.service;
 
-import com.lodny.rwcommon.grpc.favorite.FavoriteGrpc;
-import com.lodny.rwcommon.grpc.favorite.GrpcFavoriteRequest;
-import com.lodny.rwcommon.grpc.favorite.GrpcGetFavoriteInfoResponse;
+import com.lodny.rwcommon.grpc.favorite.*;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -13,6 +13,12 @@ public class FavoriteGrpcClient {
 
     @GrpcClient("favorite-grpc")
     private FavoriteGrpc.FavoriteBlockingStub favoriteStub;
+
+//    @GrpcClient("profile-grpc")
+//    private ProfileGrpc.ProfileBlockingStub profileStub;
+//
+//    @GrpcClient("user-grpc")
+//    private RwUserGrpc.RwUserBlockingStub userStub;
 
     public Long[] getFavoriteInfoByArticleId(final Long articleId, final Long loginUserId) {
         log.info("getFavoriteInfoByArticleId() : articleId={}", articleId);
@@ -26,12 +32,17 @@ public class FavoriteGrpcClient {
         return new Long[]{response.getFavoritesCount(), response.getFavorited()};
     }
 
-//
-//    @GrpcClient("profile-grpc")
-//    private ProfileGrpc.ProfileBlockingStub profileStub;
-//
-//    @GrpcClient("user-grpc")
-//    private RwUserGrpc.RwUserBlockingStub userStub;
+    public List<Long> getFavoriteArticleIdsByUserId(final Long userId) {
+        log.info("getFavoriteArticleIdsByUserId() : userId={}", userId);
+
+        GrpcGetFavoriteArticleIdsResponse response = favoriteStub.getFavoriteArticleIdsByUserId(GrpcUserIdRequest.newBuilder()
+                .setUserId(userId)
+                .build());
+        log.info("getFavoriteArticleIdsByUserId() : response={}", response);
+
+        return response.getArticleIdList();
+    }
+
 //
 //
 //    private long getFavoriteeeId(final String username) {
