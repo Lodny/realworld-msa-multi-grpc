@@ -1,7 +1,7 @@
 package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.article.ArticleGrpc;
-import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugRequest;
+import com.lodny.rwcommon.grpc.article.GrpcArticleSlugRequest;
 import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugResponse;
 import com.lodny.rwcommon.grpc.comment.*;
 import com.lodny.rwcommon.grpc.common.Common;
@@ -64,7 +64,7 @@ public class CommentGrpcClient {
 
     public Long getArticleIdBySlug(final String slug) {
         GrpcGetArticleIdBySlugResponse response = articleStub.getArticleIdBySlug(
-                GrpcGetArticleIdBySlugRequest.newBuilder()
+                GrpcArticleSlugRequest.newBuilder()
                         .setSlug(slug)
                         .build());
         log.info("getArticleIdBySlug() : response={}", response);

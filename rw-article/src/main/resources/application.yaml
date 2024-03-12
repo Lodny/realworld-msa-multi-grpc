@@ -1,6 +1,3 @@
-server:
-  port: 8083
-
 grpc:
   client:
     profile-grpc:
@@ -42,15 +39,4 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
-
-jwt:
-  header: Authorization
-  token-title: "Token "
-  secret: 231qwefopjvkjksflj2iocksdmv89iwseknr23fsd89ihrn23jhv98iuoxrj2389jhcisdkrjh2398
-  expiration-ms: 600_000_000 # 10 min
-
-logging:
-  level:
-    com.lodny.realworldmsaarticle.mapper: DEBUG
-
 

@@ -1,8 +1,6 @@
 package com.lodny.rwarticle.entity.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lodny.rwarticle.entity.Article;
-import com.lodny.rwcommon.util.MapToDto.MapToDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -19,8 +16,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class ArticleResponse {
-    @JsonIgnore
-    private Long id;
+//    @JsonIgnore
+//    private Long id;
 
     private String slug;
     private String title;
@@ -40,7 +37,7 @@ public class ArticleResponse {
                                      final ProfileResponse author,
                                      final Long[] favoriteInfo) {
         return ArticleResponse.builder()
-                .id(article.getId())
+//                .id(article.getId())
                 .slug(article.getSlug())
                 .title(article.getTitle())
                 .description(article.getDescription())

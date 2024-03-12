@@ -8,43 +8,7 @@ spring:
         - id: proxy
           uri: http://localhost:8089
           predicates:
-            - Path=/api/users/**
-        - id: article
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/articles
-        - id: article
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/articles/*
-        - id: article
-          uri: http://localhost:8083
-          predicates:
-            - Path=/api/articles/*/id
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-            - Path=/api/articles/*/favorite
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-            - Path=/api/articles/*/comments
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-            - Path=/api/articles/*/comments/**
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-           - Path=/api/tags/**
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-            - Path=/api/profiles/**
-        - id: proxy
-          uri: http://localhost:8089
-          predicates:
-            - Path=/api/follow/**
+            - Path=/api/**
 
 logging:
   level:

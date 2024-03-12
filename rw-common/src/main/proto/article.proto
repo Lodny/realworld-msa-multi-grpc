@@ -3,19 +3,54 @@ syntax = "proto3";
 package com.lodny.rwcommon.grpc;
 
 import "google/protobuf/timestamp.proto";
+import "common.proto";
 
 option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.article";
 
 service Article {
-  rpc getArticleIdBySlug (GrpcGetArticleIdBySlugRequest) returns (GrpcGetArticleIdBySlugResponse);
+  rpc getArticleIdBySlug (GrpcArticleSlugRequest) returns (GrpcGetArticleIdBySlugResponse);
+  rpc getArticleBySlug (GrpcArticleSlugRequest) returns (GrpcGetArticleResponse);
+  rpc deleteArticleBySlug (GrpcArticleSlugRequest) returns (Empty);
+  rpc getArticles (GrpcGetArticlesRequest) returns (GrpcGetArticlesResponse);
 }
 
 
-message GrpcGetArticleIdBySlugRequest {
+message GrpcArticleSlugRequest {
   string slug = 1;
 }
 
 message GrpcGetArticleIdBySlugResponse {
   int64 articleId = 1;
+}
+
+message GrpcGetArticlesRequest {
+  string type = 1;    // default, tag, feed, author, favorited
+  string value = 2;
+  int32 offset = 3;
+  int32 limit = 4;
+}
+
+message GrpcGetArticleResponse {
+  string slug = 1;
+  string title = 2;
+  string description = 3;
+  string body = 4;
+  repeated string tagList = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp updatedAt = 7;
+  bool favorited = 8;
+  int64 favoritesCount = 9;
+
+  int64 authorId = 10;
+}
+
+message GrpcGetArticlesResponse {
+  repeated GrpcGetArticleResponse article = 1;
+  int32 currentPage = 2;
+  int32 totalPages = 3;
+  int64 totalElements = 4;
+//  int64 numberOfElements = 5;
+//  bool first = 6;
+//  bool last = 7;
 }
