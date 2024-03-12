@@ -17,5 +17,5 @@ message GrpcGetArticleIdBySlugRequest {
 }
 
 message GrpcGetArticleIdBySlugResponse {
-  uint64 articleId = 1;
+  int64 articleId = 1;
 }

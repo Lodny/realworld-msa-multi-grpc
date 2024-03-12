@@ -16,8 +16,8 @@ service Follow {
 
 
 message GrpcIsFollowingRequest {
-  uint64 followeeId = 1;
-  uint64 followerId = 2;
+  int64 followeeId = 1;
+  int64 followerId = 2;
 }
 
 message GrpcIsFollowingResponse {
@@ -26,15 +26,15 @@ message GrpcIsFollowingResponse {
 
 
 message GrpcFollowRequest {
-  uint64 followeeId = 1;
-  uint64 followerId = 2;
+  int64 followeeId = 1;
+  int64 followerId = 2;
 }
 
 
 message GrpcFollowerIdRequest {
-  uint64 followerId = 1;
+  int64 followerId = 1;
 }
 
 message GrpcFolloweeIdsResponse {
-  repeated uint64 followeeId = 1;
+  repeated int64 followeeId = 1;
 }

@@ -3,15 +3,18 @@ server:
 
 grpc:
   client:
-    tag-grpc:
-      negotiation-type: plaintext
-      address: 'static://localhost:9094'
     profile-grpc:
       negotiation-type: plaintext
       address: 'static://localhost:9091'
     follow-grpc:
       negotiation-type: plaintext
       address: 'static://localhost:9092'
+    tag-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9094'
+    favorite-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9095'
 
   server:
     port: 9093

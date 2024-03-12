@@ -17,13 +17,13 @@ service Tag {
 
 
 message GrpcRegisterTagsRequest {
-  uint64 articleId = 1;
+  int64 articleId = 1;
   repeated string tags = 2;
 }
 
 
 message GrpcTopTagStringsRequest {
-  uint32 count = 1;
+  int32 count = 1;
 }
 
 message GrpcTopTagStringsResponse {
@@ -32,7 +32,7 @@ message GrpcTopTagStringsResponse {
 
 
 message GrpcTagStringsByArticleIdRequest {
-  uint64 articleId = 1;
+  int64 articleId = 1;
 }
 
 message GrpcTagStringsByArticleIdResponse   {
@@ -45,11 +45,11 @@ message GrpcArticleIdsByTagStringRequest {
 }
 
 message GrpcArticleIdsByTagStringResponse {
-  repeated uint64 articleId = 1;
+  repeated int64 articleId = 1;
 }
 
 
 message GrpcTagsByArticleIdRequest {
-  uint64 articleId = 1;
+  int64 articleId = 1;
 }
 

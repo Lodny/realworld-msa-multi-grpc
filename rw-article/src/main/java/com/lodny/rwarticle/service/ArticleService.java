@@ -33,6 +33,8 @@ public class ArticleService {
     private final TagGrpcClient tagGrpcClient;
     private final ProfileGrpcClient profileGrpcClient;
     private final FollowGrpcClient followGrpcClient;
+    private final FavoriteGrpcClient favoriteGrpcClient;
+
 
     private HttpHeaders getHttpHeadersByToken(final String token) {
         log.info("getHttpHeadersByToken() : token={}", token);
@@ -162,7 +164,7 @@ public class ArticleService {
                 .map(article -> {
                     Set<String> tags = tagGrpcClient.getTagStringsByArticleId(article.getId());
                     ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(article.getAuthorId(), loginUserId);
-                    Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(article.getId(), token);
+                    Long[] favoriteInfo = favoriteGrpcClient.getFavoriteInfoByArticleId(article.getId(), loginUserId);
                     return ArticleResponse.of(article, tags, profileResponse, favoriteInfo);
                 })
                 .toList();
@@ -191,22 +193,10 @@ public class ArticleService {
         log.info("getArticleBySlug() : tags={}", tags);
         ProfileResponse profileResponse = profileGrpcClient.getProfileByUserId(foundArticle.getAuthorId(), loginUserId);
         log.info("getArticleBySlug() : profileResponse={}", profileResponse);
-        Long[] favoriteInfo = getFavoriteInfoByArticleIdWithRestTemplate(foundArticle.getId(), token);
+        Long[] favoriteInfo = favoriteGrpcClient.getFavoriteInfoByArticleId(foundArticle.getId(), loginUserId);
         log.info("getArticleBySlug() : favoriteInfo={}", favoriteInfo);
 
         return ArticleResponse.of(foundArticle, tags, profileResponse, favoriteInfo);
-    }
-
-    private Long[] getFavoriteInfoByArticleIdWithRestTemplate(final Long articleId, final String token) {
-        log.info("getFavoriteInfoByArticleIdWithRestTemplate() : articleId={}", articleId);
-
-        ResponseEntity<Long[]> response = restTemplate.exchange(
-                "http://localhost:8080/api/articles/" + articleId + "/favorite-info",
-                HttpMethod.GET,
-                new HttpEntity<String>(getHttpHeadersByToken(token)),
-                Long[].class);
-
-        return response.getBody();
     }
 
     @Transactional

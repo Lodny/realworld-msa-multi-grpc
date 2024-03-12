@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package com.lodny.rwcommon.grpc;
+
+import "common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.lodny.rwcommon.grpc.favorite";
+
+service Favorite {
+  rpc favorite (GrpcFavoriteRequest) returns (Empty);
+  rpc unfavorite (GrpcFavoriteRequest) returns (Empty);
+  rpc getFavoriteInfo (GrpcFavoriteRequest) returns (GrpcGetFavoriteInfoResponse);
+  rpc getFavoriteArticleIdsByUserId (GrpcUserIdRequest) returns (GrpcGetFavoriteArticleIdsResponse);
+}
+
+
+message GrpcFavoriteRequest {
+  int64 articleId = 1;
+  int64 userId = 2;
+}
+
+message GrpcGetFavoriteInfoResponse {
+  int64 favoritesCount = 1;
+  int64 favorited = 2;
+}
+
+message GrpcUserIdRequest {
+  int64 userId = 1;
+}
+
+message GrpcGetFavoriteArticleIdsResponse {
+  repeated int64 articleId = 1;
+}

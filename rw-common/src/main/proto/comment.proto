@@ -16,22 +16,22 @@ service Comment {
 
 
 message GrpcRegisterCommentRequest {
-  uint64 authorId = 1;
-  uint64 articleId = 2;
+  int64 authorId = 1;
+  int64 articleId = 2;
   string body = 3;
 }
 
 message GrpcCommentResponse {
-  uint64 id = 1;
+  int64 id = 1;
   google.protobuf.Timestamp createdAt = 2;
   google.protobuf.Timestamp updatedAt = 3;
   string body = 4;
-  uint64 authorId = 5;
+  int64 authorId = 5;
 }
 
 
 message GrpcGetCommentsByArticleIdRequest {
-  uint64 articleId = 1;
+  int64 articleId = 1;
 }
 
 message GrpcGetCommentsByArticleIdResponse {
@@ -40,9 +40,9 @@ message GrpcGetCommentsByArticleIdResponse {
 
 
 message GrpcDeleteCommentByIdRequest {
-  uint64 id = 1;
-  uint64 articleId = 2;
-  uint64 authorId = 3;
+  int64 id = 1;
+  int64 articleId = 2;
+  int64 authorId = 3;
 }
 
 //message Empty {}

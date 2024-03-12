@@ -3,17 +3,6 @@ server:
 
 grpc:
   client:
-    tag-grpc:
-      negotiation-type: plaintext
-      #      address: 'localhost:9090/grpc/tag'
-      #      address: 'static://localhost:9094/grpc/tag'
-      address: 'static://localhost:9094'
-    comment-grpc:
-      negotiation-type: plaintext
-      address: 'static://localhost:9096'
-    article-grpc:
-      negotiation-type: plaintext
-      address: 'static://localhost:9093'
     profile-grpc:
       negotiation-type: plaintext
       address: 'static://localhost:9091'
@@ -23,6 +12,20 @@ grpc:
     follow-grpc:
       negotiation-type: plaintext
       address: 'static://localhost:9092'
+    article-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9093'
+    tag-grpc:
+      negotiation-type: plaintext
+      #      address: 'localhost:9090/grpc/tag'
+      #      address: 'static://localhost:9094/grpc/tag'
+      address: 'static://localhost:9094'
+    favorite-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9095'
+    comment-grpc:
+      negotiation-type: plaintext
+      address: 'static://localhost:9096'
 
 spring:
   application:
@@ -35,5 +38,6 @@ jwt:
   token-title: "Token "
   secret: 231qwefopjvkjksflj2iocksdmv89iwseknr23fsd89ihrn23jhv98iuoxrj2389jhcisdkrjh2398
   expiration-ms: 600_000_000 # 10 min
+
 
 

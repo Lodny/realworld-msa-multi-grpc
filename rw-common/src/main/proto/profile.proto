@@ -12,8 +12,8 @@ service Profile {
 
 
 message GrpcProfileByUserIdRequest {
-  uint64 userId = 1;
-  uint64 followerId = 2;
+  int64 userId = 1;
+  int64 followerId = 2;
 }
 
 message GrpcProfileResponse {
@@ -26,5 +26,5 @@ message GrpcProfileResponse {
 
 message GrpcProfileByUsernameRequest {
   string username = 1;
-  uint64 followerId = 2;
+  int64 followerId = 2;
 }
