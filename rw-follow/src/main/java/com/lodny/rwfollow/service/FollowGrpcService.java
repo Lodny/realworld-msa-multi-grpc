@@ -1,4 +1,4 @@
-package com.lodny.rwfollow.grpc;
+package com.lodny.rwfollow.service;
 
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.follow.*;

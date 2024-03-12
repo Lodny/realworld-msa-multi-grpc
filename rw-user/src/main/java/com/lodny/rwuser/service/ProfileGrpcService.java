@@ -1,10 +1,10 @@
 package com.lodny.rwuser.service;
 
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
+import com.lodny.rwcommon.grpc.profile.GrpcProfileByUsernameRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwuser.entity.RealWorldUser;
-import com.lodny.rwuser.entity.dto.ProfileResponse;
 import com.lodny.rwuser.repository.UserRepository;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,17 @@ public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
     private final UserRepository userRepository;
     private final FollowGrpcClient followGrpcClient;
 
+    private GrpcProfileResponse getGrpcProfileResponse(final long followeeId, final long followerId, final RealWorldUser foundUser) {
+        Boolean following = followGrpcClient.isFollowing(followeeId, followerId);
+
+        return GrpcProfileResponse.newBuilder()
+                .setUsername(foundUser.getUsername())
+                .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
+                .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
+                .setFollowing(following)
+                .build();
+    }
+
     @Override
     public void getProfileByUserId(final GrpcProfileByUserIdRequest request,
                                    final StreamObserver<GrpcProfileResponse> responseObserver) {
@@ -28,28 +39,24 @@ public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
         log.info("getProfileByUserId() : foundUser={}", foundUser);
 
-        Boolean following = followGrpcClient.isFollowing(request.getUserId(), request.getFollowerId());
-
-        GrpcProfileResponse response = GrpcProfileResponse.newBuilder()
-                .setUsername(foundUser.getUsername())
-                .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
-                .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
-                .setFollowing(following)
-                .build();
+        GrpcProfileResponse response = getGrpcProfileResponse(request.getUserId(), request.getFollowerId(), foundUser);
         log.info("getProfileByUserId() : response={}", response);
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
-    public ProfileResponse getProfile(final String username, final Long loginUserId) {
-        RealWorldUser foundUser = userRepository.findByUsername(username)
+    @Override
+    public void getProfileByUsername(final GrpcProfileByUsernameRequest request,
+                                     final StreamObserver<GrpcProfileResponse> responseObserver) {
+        RealWorldUser foundUser = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
-        log.info("getProfile() : foundUser={}", foundUser);
+        log.info("getProfileByUsername() : foundUser={}", foundUser);
 
-        Boolean following = followGrpcClient.isFollowing(foundUser.getId(), loginUserId);
-        log.info("getProfile() : following={}", following);
+        GrpcProfileResponse response = getGrpcProfileResponse(foundUser.getId(), request.getFollowerId(), foundUser);
+        log.info("getProfileByUsername() : response={}", response);
 
-        return ProfileResponse.of(foundUser, following);
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

@@ -1,4 +1,4 @@
-package com.lodny.rwcomment.grpc;
+package com.lodny.rwcomment.service;
 
 import com.lodny.rwcomment.entity.Comment;
 import com.lodny.rwcomment.repository.CommentRepository;

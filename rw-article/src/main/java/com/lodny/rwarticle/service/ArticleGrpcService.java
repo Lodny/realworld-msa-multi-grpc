@@ -1,21 +1,14 @@
-package com.lodny.rwarticle.grpc;
+package com.lodny.rwarticle.service;
 
 import com.lodny.rwarticle.entity.Article;
 import com.lodny.rwarticle.repository.ArticleRepository;
 import com.lodny.rwcommon.grpc.article.ArticleGrpc;
 import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugRequest;
 import com.lodny.rwcommon.grpc.article.GrpcGetArticleIdBySlugResponse;
-import com.lodny.rwcommon.grpc.tag.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
-import org.springframework.data.domain.PageRequest;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @GrpcService

@@ -1,4 +1,4 @@
-package com.lodny.rwproxy.grpc;
+package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.tag.*;

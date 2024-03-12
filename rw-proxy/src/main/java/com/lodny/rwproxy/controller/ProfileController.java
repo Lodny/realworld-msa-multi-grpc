@@ -1,11 +1,10 @@
-package com.lodny.rwuser.controller;
+package com.lodny.rwproxy.controller;
 
-import com.lodny.rwcommon.util.LoginInfo;
-import com.lodny.rwuser.entity.dto.ProfileResponse;
-import com.lodny.rwuser.entity.wrapper.WrapProfileResponse;
-import com.lodny.rwuser.service.ProfileGrpcService;
 import com.lodny.rwcommon.annotation.LoginUser;
-import com.lodny.rwcommon.util.ImageUtil;
+import com.lodny.rwcommon.util.LoginInfo;
+import com.lodny.rwproxy.entity.dto.ProfileResponse;
+import com.lodny.rwproxy.entity.wrapper.WrapProfileResponse;
+import com.lodny.rwproxy.service.ProfileGrpcClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/profiles")
 public class ProfileController {
 
-    private final ProfileGrpcService profileGrpcService;
+    private final ProfileGrpcClient profileGrpcClient;
 
     private Long getLoginIdByLoginInfo(final LoginInfo loginInfo) {
         return loginInfo != null ? loginInfo.getUserId() : -1L;
@@ -32,8 +31,8 @@ public class ProfileController {
         log.info("getProfile() : username={}", username);
         log.info("getProfile() : loginInfo={}", loginInfo);
 
-        ProfileResponse profileResponse = profileGrpcService.getProfile(username, getLoginIdByLoginInfo(loginInfo));
-        profileResponse.setImage(ImageUtil.nullToDefaultImage(profileResponse.getImage()));
+        ProfileResponse profileResponse = profileGrpcClient.getProfileByUsername(username, getLoginIdByLoginInfo(loginInfo));
+//        profileResponse.setImage(ImageUtil.nullToDefaultImage(profileResponse.getImage()));
         log.info("getProfile() : profileResponse={}", profileResponse);
 
         return ResponseEntity.ok(new WrapProfileResponse(profileResponse));
