@@ -1,11 +1,11 @@
-package com.lodny.rwuser.grpc;
+package com.lodny.rwuser.service;
 
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwuser.entity.RealWorldUser;
+import com.lodny.rwuser.entity.dto.ProfileResponse;
 import com.lodny.rwuser.repository.UserRepository;
-import com.lodny.rwuser.service.FollowGrpcClient;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,5 +40,16 @@ public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    public ProfileResponse getProfile(final String username, final Long loginUserId) {
+        RealWorldUser foundUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
+        log.info("getProfile() : foundUser={}", foundUser);
+
+        Boolean following = followGrpcClient.isFollowing(foundUser.getId(), loginUserId);
+        log.info("getProfile() : following={}", following);
+
+        return ProfileResponse.of(foundUser, following);
     }
 }

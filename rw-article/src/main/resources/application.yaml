@@ -5,8 +5,6 @@ grpc:
   client:
     tag-grpc:
       negotiation-type: plaintext
-#      address: 'localhost:9090/grpc/tag'
-#      address: 'static://localhost:9094/grpc/tag'
       address: 'static://localhost:9094'
     profile-grpc:
       negotiation-type: plaintext

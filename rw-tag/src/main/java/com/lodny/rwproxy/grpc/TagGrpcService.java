@@ -1,6 +1,5 @@
 package com.lodny.rwproxy.grpc;
 
-import com.google.protobuf.Empty;
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.tag.*;
 import com.lodny.rwproxy.entity.Tag;
@@ -27,10 +26,9 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
         long articleId = request.getArticleId();
         log.info("registerTags() : articleId={}", articleId);
 
-        tagRepository.saveAll(
-                request.getTagsList().stream()
-                        .map(tag -> new Tag(articleId, tag))
-                        .toList());
+        tagRepository.saveAll(request.getTagsList().stream()
+                .map(tag -> new Tag(articleId, tag))
+                .toList());
 
         responseObserver.onNext(Common.Empty.getDefaultInstance());
         responseObserver.onCompleted();
