@@ -25,7 +25,7 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
         GrpcGetUserIdByUsernameResponse response = GrpcGetUserIdByUsernameResponse.newBuilder()
-                .setUserId(foundUser.getId())
+                .setId(foundUser.getId())
                 .build();
         log.info("getUserIdByUsername() : response={}", response);
 
@@ -48,10 +48,13 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
                 .setUsername(foundUser.getUsername())
                 .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
                 .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
+                .setId(foundUser.getId())
                 .build();
         log.info("login() : response={}", response);
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
+
 }

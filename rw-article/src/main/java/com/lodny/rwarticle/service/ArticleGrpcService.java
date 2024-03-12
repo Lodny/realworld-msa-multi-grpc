@@ -26,6 +26,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         GrpcGetArticlesResponse response = GrpcGetArticlesResponse.newBuilder()
                 .addAllArticle(articlePage.getContent().stream()
                         .map(article -> GrpcGetArticleResponse.newBuilder()
+                                .setId(article.getId())
                                 .setSlug(article.getSlug())
                                 .setTitle(article.getTitle())
                                 .setDescription(article.getDescription())
@@ -51,7 +52,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         log.info("getArticleIdBySlug() : foundArticle={}", foundArticle);
 
         GrpcGetArticleIdBySlugResponse response = GrpcGetArticleIdBySlugResponse.newBuilder()
-                .setArticleId(foundArticle.getId())
+                .setId(foundArticle.getId())
                 .build();
         log.info("getArticleIdBySlug() : response={}", response);
 
@@ -74,7 +75,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         PageRequest pageRequest = getPageRequest(request.getOffset(), request.getLimit());
         log.info("getArticles() : pageRequest={}", pageRequest);
 
-        Page<Article> articlePage = articleRepository.findAllByIdInOrderByCreatedAtDesc(request.getArticleIdList(), pageRequest);
+        Page<Article> articlePage = articleRepository.findAllByIdInOrderByCreatedAtDesc(request.getIdList(), pageRequest);
         convertGrpcResponse(responseObserver, articlePage);
     }
 

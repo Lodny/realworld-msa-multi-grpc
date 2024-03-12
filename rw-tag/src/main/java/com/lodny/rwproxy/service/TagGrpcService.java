@@ -55,9 +55,9 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
 
     @Override
     public void getTagStringsByArticleId(final GrpcTagStringsByArticleIdRequest request, final StreamObserver<GrpcTagStringsByArticleIdResponse> responseObserver) {
-        Set<String> tags = tagRepository.findAllByArticleId(request.getArticleId())
+        List<String> tags = tagRepository.findAllByArticleId(request.getArticleId())
                 .stream().map(Tag::getTag)
-                .collect(Collectors.toSet());
+                .toList();
         log.info("getTagsByArticleId() : tags={}", tags);
 
         GrpcTagStringsByArticleIdResponse response = GrpcTagStringsByArticleIdResponse.newBuilder()

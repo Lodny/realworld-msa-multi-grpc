@@ -23,7 +23,7 @@ message GrpcArticleSlugRequest {
 }
 
 message GrpcGetArticleIdBySlugResponse {
-  int64 articleId = 1;
+  int64 id = 1;
 }
 
 message GrpcGetArticlesRequest {
@@ -32,17 +32,18 @@ message GrpcGetArticlesRequest {
 }
 
 message GrpcGetArticleResponse {
-  string slug = 1;
-  string title = 2;
-  string description = 3;
-  string body = 4;
-  repeated string tagList = 5;
-  google.protobuf.Timestamp createdAt = 6;
-  google.protobuf.Timestamp updatedAt = 7;
-  bool favorited = 8;
-  int64 favoritesCount = 9;
+  int64 id = 1;
+  string slug = 2;
+  string title = 3;
+  string description = 4;
+  string body = 5;
+  repeated string tagList = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
+  bool favorited = 9;
+  int64 favoritesCount = 10;
 
-  int64 authorId = 10;
+  int64 authorId = 11;
 }
 
 message GrpcGetArticlesResponse {
@@ -58,7 +59,7 @@ message GrpcGetArticlesResponse {
 message GrpcArticlesByArticleIdsRequest {
   int32 offset = 1;
   int32 limit = 2;
-  repeated int64 articleId = 3;
+  repeated int64 id = 3;
 }
 
 message GrpcArticlesByAuthorIdRequest {

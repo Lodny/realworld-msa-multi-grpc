@@ -32,8 +32,7 @@ public class UserGrpcClient {
                 .build());
         log.info("login() : response={}", response);
 
-//        String token = jwtUtil.createToken(response.getEmail(), response.getId());
-        String token = jwtUtil.createToken(response.getEmail(), -1L);
+        String token = jwtUtil.createToken(response.getEmail(), response.getId());
         log.info("login() : token={}", token);
 
         return new UserResponse(

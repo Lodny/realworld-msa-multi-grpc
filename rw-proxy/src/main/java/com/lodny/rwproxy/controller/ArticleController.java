@@ -29,7 +29,7 @@ public class ArticleController {
         return loginInfo != null ? loginInfo.getToken() : "";
     }
 
-    private static long getLoginUserId(final LoginInfo loginInfo) {
+    private long getLoginUserId(final LoginInfo loginInfo) {
         return loginInfo != null ? loginInfo.getUserId() : -1L;
     }
 

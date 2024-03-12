@@ -29,11 +29,11 @@ public class FollowGrpcClient {
 
 
     private long getFolloweeId(final String username) {
-        GrpcGetUserIdByUsernameResponse userIdByUsername = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+        GrpcGetUserIdByUsernameResponse userResponse = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
                 .setUsername(username)
                 .build());
 
-        return userIdByUsername.getUserId();
+        return userResponse.getId();
     }
 
     private ProfileResponse getProfileResponse(final long followerId, final long followeeId) {

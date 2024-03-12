@@ -69,7 +69,7 @@ public class CommentGrpcClient {
                         .build());
         log.info("getArticleIdBySlug() : response={}", response);
 
-        return response.getArticleId();
+        return response.getId();
     }
 
     public List<CommentResponse> getCommentsByArticleId(final Long articleId, final Long followerId) {
