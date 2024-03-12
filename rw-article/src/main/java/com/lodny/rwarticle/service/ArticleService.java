@@ -61,19 +61,6 @@ public class ArticleService {
 //        return getArticleResponses(articlePage, loginUserId, token);
 //    }
 //
-//    public Page<ArticleResponse> getArticlesByTag(final PageRequest pageRequest,
-//                                                  final Long loginUserId,
-//                                                  final String token,
-//                                                  final String tag) {
-//        List<Long> articleIds = tagGrpcClient.getArticleIdsByTagString(tag);
-//        log.info("getArticlesByTag() : articleIds={}", articleIds);
-//        //todo::orderby
-//
-//        Page<Article> articlePage = articleRepository.findByIdInOrderByCreatedAtDesc(articleIds, pageRequest);
-//        log.info("getArticlesByTag() : articlePage={}", articlePage);
-//
-//        return getArticleResponses(articlePage, loginUserId, token);
-//    }
 //
 //    public Page<ArticleResponse> getArticlesByAuthor(final PageRequest pageRequest,
 //                                                     final Long loginUserId,

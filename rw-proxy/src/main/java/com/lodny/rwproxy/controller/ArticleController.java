@@ -1,5 +1,6 @@
 package com.lodny.rwproxy.controller;
 
+import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
 import com.lodny.rwcommon.util.LoginInfo;
 import com.lodny.rwproxy.entity.dto.ArticleParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @Slf4j
 @RestController
@@ -56,30 +58,27 @@ public class ArticleController {
 //
 //        return ResponseEntity.ok(new WrapArticleResponse(articleResponse));
 //    }
-//
-//    @JwtTokenRequired
-//    @GetMapping("/feed")
-//    public ResponseEntity<?> getFeedArticle(@ModelAttribute final ArticleParam articleParam,
-//                                            @LoginUser final LoginInfo loginInfo) {
-//        log.info("getFeedArticle() : articleParam={}", articleParam);
-//        log.info("getFeedArticle() : loginInfo={}", loginInfo);
-//
-//        PageRequest pageRequest = getPageRequest(articleParam);
-//        log.info("getFeedArticle() : pageRequest={}", pageRequest);
-//
-//        final Page<ArticleResponse> pageArticles = articleService.getFeedArticles(pageRequest, loginInfo.getToken(), loginInfo.getUserId());
-//        log.info("getFeedArticle() : pageArticles={}", pageArticles);
-//
-//        return ResponseEntity.ok(new WrapArticleResponses(pageArticles));
-//    }
+
+    @JwtTokenRequired
+    @GetMapping("/feed")
+    public ResponseEntity<?> getFeedArticle(@ModelAttribute final ArticleParam articleParam,
+                                            @LoginUser final LoginInfo loginInfo) {
+        log.info("getFeedArticle() : articleParam={}", articleParam);
+        log.info("getFeedArticle() : loginInfo={}", loginInfo);
+
+        final var loginUserId = getLoginUserId(loginInfo);
+        log.info("getArticles() : loginUserId={}", loginUserId);
+
+        final Page<ArticleResponse> pageArticles = articleGrpcClient.getFeedArticlesByLoginUser(articleParam, loginUserId);
+        log.info("getFeedArticle() : pageArticles={}", pageArticles);
+
+        return ResponseEntity.ok(new WrapArticleResponses(pageArticles));
+    }
 
     @GetMapping
     public ResponseEntity<?> getArticles(@ModelAttribute final ArticleParam articleParam,
                                          @LoginUser final LoginInfo loginInfo) {
         log.info("getArticles() : articleParam={}", articleParam);
-
-//        PageRequest pageRequest = getPageRequest(articleParam);
-//        log.info("getArticles() : pageRequest={}", pageRequest);
 
         final var loginUserId = getLoginUserId(loginInfo);
         log.info("getArticles() : loginUserId={}", loginUserId);
@@ -88,11 +87,12 @@ public class ArticleController {
 
         final Page<ArticleResponse> pageArticles =
                 switch (articleParam.type()) {
-//                    case "tag"       -> articleService.getArticlesByTag(pageRequest, loginUserId, token, articleParam.tag());
-//                    case "author"    -> articleService.getArticlesByAuthor(pageRequest, loginUserId, token, articleParam.author());
+                    case "tag"       -> articleGrpcClient.getArticlesByTag(articleParam, loginUserId, articleParam.tag());
+                    case "author"    -> articleGrpcClient.getArticlesByAuthor(articleParam, loginUserId, articleParam.author());
 //                    case "favorited" -> articleService.getArticlesByFavorited(pageRequest, loginUserId, token, articleParam.favorited());
-                    default          -> articleGrpcClient.getArticles(articleParam, loginUserId, token);
+//                    default          -> articleGrpcClient.getArticles(articleParam, loginUserId, token);
 //                    default          -> articleService.getArticles(pageRequest, loginUserId, token);
+                    default          -> articleGrpcClient.getArticles(articleParam, loginUserId);
                 };
         log.info("getArticles() : pageArticles={}", pageArticles);
 

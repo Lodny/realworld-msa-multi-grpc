@@ -13,8 +13,10 @@ service Article {
   rpc getArticleBySlug (GrpcArticleSlugRequest) returns (GrpcGetArticleResponse);
   rpc deleteArticleBySlug (GrpcArticleSlugRequest) returns (Empty);
   rpc getArticles (GrpcGetArticlesRequest) returns (GrpcGetArticlesResponse);
+  rpc getArticlesByArticleIds (GrpcArticlesByArticleIdsRequest) returns (GrpcGetArticlesResponse);
+  rpc getArticlesByAuthorId (GrpcArticlesByAuthorIdRequest) returns (GrpcGetArticlesResponse);
+  rpc getArticlesByAuthorIds (GrpcArticlesByAuthorIdsRequest) returns (GrpcGetArticlesResponse);
 }
-
 
 message GrpcArticleSlugRequest {
   string slug = 1;
@@ -25,10 +27,8 @@ message GrpcGetArticleIdBySlugResponse {
 }
 
 message GrpcGetArticlesRequest {
-  string type = 1;    // default, tag, feed, author, favorited
-  string value = 2;
-  int32 offset = 3;
-  int32 limit = 4;
+  int32 offset = 1;
+  int32 limit = 2;
 }
 
 message GrpcGetArticleResponse {
@@ -54,3 +54,22 @@ message GrpcGetArticlesResponse {
 //  bool first = 6;
 //  bool last = 7;
 }
+
+message GrpcArticlesByArticleIdsRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+  repeated int64 articleId = 3;
+}
+
+message GrpcArticlesByAuthorIdRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+  int64 authorId = 3;
+}
+
+message GrpcArticlesByAuthorIdsRequest {
+  int32 offset = 1;
+  int32 limit = 3;
+  repeated int64 authorId = 2;
+}
+

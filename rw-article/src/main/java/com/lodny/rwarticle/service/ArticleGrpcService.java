@@ -22,6 +22,28 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         return PageRequest.of(offset / limit, limit);
     }
 
+    private void convertGrpcResponse(final StreamObserver<GrpcGetArticlesResponse> responseObserver, final Page<Article> articlePage) {
+        GrpcGetArticlesResponse response = GrpcGetArticlesResponse.newBuilder()
+                .addAllArticle(articlePage.getContent().stream()
+                        .map(article -> GrpcGetArticleResponse.newBuilder()
+                                .setSlug(article.getSlug())
+                                .setTitle(article.getTitle())
+                                .setDescription(article.getDescription())
+                                .setBody(article.getBody())
+                                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getCreatedAt()))
+                                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getUpdatedAt()))
+                                .setAuthorId(article.getAuthorId())
+                                .build())
+                        .toList())
+                .setCurrentPage(articlePage.getNumber())
+                .setTotalPages(articlePage.getTotalPages())
+                .setTotalElements(articlePage.getTotalElements())
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
     @Override
     public void getArticleIdBySlug(final GrpcArticleSlugRequest request, final StreamObserver<GrpcGetArticleIdBySlugResponse> responseObserver) {
         Article foundArticle = articleRepository.findBySlug(request.getSlug())
@@ -44,39 +66,24 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         log.info("getArticles() : pageRequest={}", pageRequest);
 
         Page<Article> articlePage = articleRepository.findAllByOrderByCreatedAtDesc(pageRequest);
-        GrpcGetArticlesResponse response = GrpcGetArticlesResponse.newBuilder()
-                .addAllArticle(articlePage.getContent().stream()
-                        .map(article -> GrpcGetArticleResponse.newBuilder()
-                                .setSlug(article.getSlug())
-                                .setTitle(article.getTitle())
-                                .setDescription(article.getDescription())
-                                .setBody(article.getBody())
-                                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getCreatedAt()))
-                                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getUpdatedAt()))
-                                .setAuthorId(article.getAuthorId())
-                                .build())
-                        .toList())
-                .setCurrentPage(articlePage.getNumber())
-                .setTotalPages(articlePage.getTotalPages())
-                .setTotalElements(articlePage.getTotalElements())
-                .build();
-        log.info("getArticles() : response={}", response);
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        convertGrpcResponse(responseObserver, articlePage);
     }
 
-    //    @Override
-//    public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Empty> responseObserver) {
-//        long articleId = request.getArticleId();
-//        log.info("registerTags() : articleId={}", articleId);
-//
-//        articleRepository.saveAll(
-//                request.getTagsList().stream()
-//                        .map(tag -> new Tag(articleId, tag))
-//                        .toList());
-//
-//        responseObserver.onNext(Empty.getDefaultInstance());
-//        responseObserver.onCompleted();
-//    }
+    @Override
+    public void getArticlesByArticleIds(final GrpcArticlesByArticleIdsRequest request, final StreamObserver<GrpcGetArticlesResponse> responseObserver) {
+        PageRequest pageRequest = getPageRequest(request.getOffset(), request.getLimit());
+        log.info("getArticles() : pageRequest={}", pageRequest);
+
+        Page<Article> articlePage = articleRepository.findAllByIdInOrderByCreatedAtDesc(request.getArticleIdList(), pageRequest);
+        convertGrpcResponse(responseObserver, articlePage);
+    }
+
+    @Override
+    public void getArticlesByAuthorIds(final GrpcArticlesByAuthorIdsRequest request, final StreamObserver<GrpcGetArticlesResponse> responseObserver) {
+        PageRequest pageRequest = getPageRequest(request.getOffset(), request.getLimit());
+        log.info("getArticles() : pageRequest={}", pageRequest);
+
+        Page<Article> articlePage = articleRepository.findAllByAuthorIdInOrderByCreatedAtDesc(request.getAuthorIdList(), pageRequest);
+        convertGrpcResponse(responseObserver, articlePage);
+    }
 }

@@ -14,7 +14,8 @@ public interface ArticleRepository extends Repository<Article, Long> {
     Page<Article> findAllByOrderByCreatedAtDesc(PageRequest pageRequest);
     Page<Article> findByIdInOrderByCreatedAtDesc(List<Long> articleIds, PageRequest pageRequest);
     Page<Article> findByAuthorIdInOrderByCreatedAtDesc(List<Long> followeeIds, PageRequest pageRequest);
-    Page<Article> findAllByAuthorIdOrderByCreatedAtDesc(Long authorId, PageRequest pageRequest);
     Page<Article> findAllByIdInOrderByCreatedAtDesc(List<Long> articleIds, PageRequest pageRequest);
     void delete(Article foundArticle);
+    Page<Article> findAllByAuthorIdOrderByCreatedAtDesc(Long authorId, PageRequest pageRequest);
+    Page<Article> findAllByAuthorIdInOrderByCreatedAtDesc(List<Long> authorIdList, PageRequest pageRequest);
 }
