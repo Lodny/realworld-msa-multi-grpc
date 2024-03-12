@@ -11,8 +11,6 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @GrpcService
@@ -54,7 +52,7 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     }
 
     @Override
-    public void getTagStringsByArticleId(final GrpcTagStringsByArticleIdRequest request, final StreamObserver<GrpcTagStringsByArticleIdResponse> responseObserver) {
+    public void getTagStringsByArticleId(final Common.GrpcArticleIdRequest request, final StreamObserver<GrpcTagStringsByArticleIdResponse> responseObserver) {
         List<String> tags = tagRepository.findAllByArticleId(request.getArticleId())
                 .stream().map(Tag::getTag)
                 .toList();

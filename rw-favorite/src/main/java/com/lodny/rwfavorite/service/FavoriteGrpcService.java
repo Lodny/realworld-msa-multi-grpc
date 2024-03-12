@@ -52,13 +52,13 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
     }
 
     @Override
-    public void getFavoriteArticleIdsByUserId(final GrpcUserIdRequest request, final StreamObserver<GrpcGetFavoriteArticleIdsResponse> responseObserver) {
-        List<Long> articleIds = favoriteRepository.findAllByIdUserId(request.getUserId())
+    public void getFavoriteArticleIdsByUserId(final Common.GrpcIdRequest request, final StreamObserver<Common.GrpcIdListResponse> responseObserver) {
+        List<Long> articleIds = favoriteRepository.findAllByIdUserId(request.getId())
                 .stream().map(favorite -> favorite.getId().getArticleId()).toList();
         log.info("getFavoriteArticleIdsByUserId() : articleIds={}", articleIds);
 
-        GrpcGetFavoriteArticleIdsResponse response = GrpcGetFavoriteArticleIdsResponse.newBuilder()
-                .addAllArticleId(articleIds)
+        Common.GrpcIdListResponse response = Common.GrpcIdListResponse.newBuilder()
+                .addAllId(articleIds)
                 .build();
         log.info("getFavoriteArticleIdsByUserId() : response={}", response);
 

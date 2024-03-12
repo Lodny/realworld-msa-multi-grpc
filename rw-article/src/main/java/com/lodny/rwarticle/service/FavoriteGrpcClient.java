@@ -1,5 +1,6 @@
 package com.lodny.rwarticle.service;
 
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.*;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -35,18 +36,18 @@ public class FavoriteGrpcClient {
     public List<Long> getFavoriteArticleIdsByUserId(final Long userId) {
         log.info("getFavoriteArticleIdsByUserId() : userId={}", userId);
 
-        GrpcGetFavoriteArticleIdsResponse response = favoriteStub.getFavoriteArticleIdsByUserId(GrpcUserIdRequest.newBuilder()
-                .setUserId(userId)
+        Common.GrpcIdListResponse response = favoriteStub.getFavoriteArticleIdsByUserId(Common.GrpcIdRequest.newBuilder()
+                .setId(userId)
                 .build());
         log.info("getFavoriteArticleIdsByUserId() : response={}", response);
 
-        return response.getArticleIdList();
+        return response.getIdList();
     }
 
 //
 //
 //    private long getFavoriteeeId(final String username) {
-//        GrpcGetUserIdByUsernameResponse userIdByUsername = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+//        GrpcIdResponse userIdByUsername = userStub.getUserIdByUsername(GrpcUsernameRequest.newBuilder()
 //                .setUsername(username)
 //                .build());
 //

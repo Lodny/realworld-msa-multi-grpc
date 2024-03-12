@@ -11,7 +11,7 @@ service Favorite {
   rpc favorite (GrpcFavoriteRequest) returns (Empty);
   rpc unfavorite (GrpcFavoriteRequest) returns (Empty);
   rpc getFavoriteInfo (GrpcFavoriteRequest) returns (GrpcGetFavoriteInfoResponse);
-  rpc getFavoriteArticleIdsByUserId (GrpcUserIdRequest) returns (GrpcGetFavoriteArticleIdsResponse);
+  rpc getFavoriteArticleIdsByUserId (GrpcIdRequest) returns (GrpcIdListResponse);
 }
 
 
@@ -25,10 +25,3 @@ message GrpcGetFavoriteInfoResponse {
   int64 favorited = 2;
 }
 
-message GrpcUserIdRequest {
-  int64 userId = 1;
-}
-
-message GrpcGetFavoriteArticleIdsResponse {
-  repeated int64 articleId = 1;
-}

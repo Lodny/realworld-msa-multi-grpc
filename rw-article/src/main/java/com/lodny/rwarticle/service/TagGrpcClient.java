@@ -1,5 +1,6 @@
 package com.lodny.rwarticle.service;
 
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.tag.*;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -37,7 +38,7 @@ public class TagGrpcClient {
     }
 
     public Set<String> getTagStringsByArticleId(final Long articleId) {
-        GrpcTagStringsByArticleIdResponse response = tagBlockingStub.getTagStringsByArticleId(GrpcTagStringsByArticleIdRequest.newBuilder()
+        GrpcTagStringsByArticleIdResponse response = tagBlockingStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
                 .setArticleId(articleId).build());
         log.info("getTagStringsByArticleId() : response={}", response);
 

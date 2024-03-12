@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package com.lodny.rwcommon.grpc;
 
+import "common.proto";
+
 option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.rwuser";
 
@@ -9,7 +11,7 @@ service RwUser {
   rpc registerUser (GrpcRegisterUserRequest) returns (GrpcLoginResponse);
   rpc login (GrpcLoginRequest) returns (GrpcLoginResponse);
   rpc updateUser (GrpcUpdateUserRequest) returns (GrpcLoginResponse);
-  rpc getUserIdByUsername (GrpcGetUserIdByUsernameRequest) returns (GrpcGetUserIdByUsernameResponse);
+  rpc getUserIdByUsername (GrpcUsernameRequest) returns (GrpcIdResponse);
 }
 
 
@@ -40,10 +42,5 @@ message GrpcLoginResponse {
   optional int64 id = 5;
 }
 
-message GrpcGetUserIdByUsernameRequest {
-  string username = 1;
-}
 
-message GrpcGetUserIdByUsernameResponse {
-  int64 id = 1;
-}
+

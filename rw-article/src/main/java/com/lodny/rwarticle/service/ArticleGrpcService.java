@@ -3,6 +3,7 @@ package com.lodny.rwarticle.service;
 import com.lodny.rwarticle.entity.Article;
 import com.lodny.rwarticle.repository.ArticleRepository;
 import com.lodny.rwcommon.grpc.article.*;
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +47,13 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
     }
 
     @Override
-    public void getArticleIdBySlug(final GrpcArticleSlugRequest request, final StreamObserver<GrpcGetArticleIdBySlugResponse> responseObserver) {
+    public void getArticleIdBySlug(final Common.GrpcSlugRequest request,
+                                   final StreamObserver<Common.GrpcIdResponse> responseObserver) {
         Article foundArticle = articleRepository.findBySlug(request.getSlug())
                 .orElseThrow(() -> new IllegalArgumentException("article not found"));
         log.info("getArticleIdBySlug() : foundArticle={}", foundArticle);
 
-        GrpcGetArticleIdBySlugResponse response = GrpcGetArticleIdBySlugResponse.newBuilder()
+        Common.GrpcIdResponse response = Common.GrpcIdResponse.newBuilder()
                 .setId(foundArticle.getId())
                 .build();
         log.info("getArticleIdBySlug() : response={}", response);
@@ -61,7 +63,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
     }
 
     @Override
-    public void getArticles(final GrpcGetArticlesRequest request,
+    public void getArticles(final Common.GrpcPageRequest request,
                             final StreamObserver<GrpcGetArticlesResponse> responseObserver) {
         PageRequest pageRequest = getPageRequest(request.getOffset(), request.getLimit());
         log.info("getArticles() : pageRequest={}", pageRequest);

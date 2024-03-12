@@ -1,16 +1,6 @@
 package com.lodny.rwproxy.service;
 
-import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.FavoriteGrpc;
-import com.lodny.rwcommon.grpc.follow.FollowGrpc;
-import com.lodny.rwcommon.grpc.follow.GrpcFollowRequest;
-import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
-import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
-import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameRequest;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameResponse;
-import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
-import com.lodny.rwproxy.entity.dto.ProfileResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -30,7 +20,7 @@ public class FavoriteGrpcClient {
 
 
 //    private long getFolloweeId(final String username) {
-//        GrpcGetUserIdByUsernameResponse userIdByUsername = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+//        GrpcIdResponse userIdByUsername = userStub.getUserIdByUsername(GrpcUsernameRequest.newBuilder()
 //                .setUsername(username)
 //                .build());
 //

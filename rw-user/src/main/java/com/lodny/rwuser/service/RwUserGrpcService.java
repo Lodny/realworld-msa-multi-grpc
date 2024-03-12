@@ -1,6 +1,9 @@
 package com.lodny.rwuser.service;
 
-import com.lodny.rwcommon.grpc.rwuser.*;
+import com.lodny.rwcommon.grpc.common.Common;
+import com.lodny.rwcommon.grpc.rwuser.GrpcLoginRequest;
+import com.lodny.rwcommon.grpc.rwuser.GrpcLoginResponse;
+import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
 import com.lodny.rwuser.entity.RealWorldUser;
 import com.lodny.rwuser.repository.UserRepository;
 import io.grpc.stub.StreamObserver;
@@ -16,15 +19,14 @@ import java.util.Optional;
 public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
 
     private final UserRepository userRepository;
-//    private final FollowGrpcClient followGrpcClient;
 
     @Override
-    public void getUserIdByUsername(final GrpcGetUserIdByUsernameRequest request,
-                                    final StreamObserver<GrpcGetUserIdByUsernameResponse> responseObserver) {
+    public void getUserIdByUsername(final Common.GrpcUsernameRequest request,
+                                    final StreamObserver<Common.GrpcIdResponse> responseObserver) {
         RealWorldUser foundUser = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
-        GrpcGetUserIdByUsernameResponse response = GrpcGetUserIdByUsernameResponse.newBuilder()
+        Common.GrpcIdResponse response = Common.GrpcIdResponse.newBuilder()
                 .setId(foundUser.getId())
                 .build();
         log.info("getUserIdByUsername() : response={}", response);

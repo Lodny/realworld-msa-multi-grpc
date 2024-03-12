@@ -1,14 +1,16 @@
 package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.article.*;
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.FavoriteGrpc;
 import com.lodny.rwcommon.grpc.favorite.GrpcFavoriteRequest;
 import com.lodny.rwcommon.grpc.favorite.GrpcGetFavoriteInfoResponse;
 import com.lodny.rwcommon.grpc.follow.FollowGrpc;
 import com.lodny.rwcommon.grpc.follow.GrpcFolloweeIdsResponse;
 import com.lodny.rwcommon.grpc.follow.GrpcFollowerIdRequest;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameRequest;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameResponse;
+import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
+import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
+import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
 import com.lodny.rwcommon.grpc.tag.*;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
@@ -46,6 +48,9 @@ public class ArticleGrpcClient {
     @GrpcClient("favorite-grpc")
     private FavoriteGrpc.FavoriteBlockingStub favoriteStub;
 
+    @GrpcClient("profile-grpc")
+    private ProfileGrpc.ProfileBlockingStub profileStub;
+
     private static PageRequest getPageRequest(final ArticleParam articleParam) {
         int pageSize = articleParam.limit();
         int pageNo = articleParam.offset() / pageSize;
@@ -58,8 +63,7 @@ public class ArticleGrpcClient {
                                                           final long loginUserId) {
         List<ArticleResponse> articleResponses = response.getArticleList().stream()
                 .map(grpcArticle -> {
-                    //todo::
-                    GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(GrpcTagStringsByArticleIdRequest.newBuilder()
+                    GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
                             .setArticleId(grpcArticle.getId())
                             .build());
                     log.info("getArticleResponses() : tagResponse={}", tagResponse);
@@ -72,7 +76,17 @@ public class ArticleGrpcClient {
 
                     Boolean favorited = favoriteResponse.getFavorited() == 1L;
                     Long favoritesCount = favoriteResponse.getFavoritesCount();
-                    ProfileResponse profile = new ProfileResponse("juice", "", "", false);
+
+                    GrpcProfileResponse profileResponse = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
+                            .setUserId(grpcArticle.getAuthorId())
+                            .setFollowerId(loginUserId)
+                            .build());
+                    log.info("getArticleResponses() : profileResponse={}", profileResponse);
+                    ProfileResponse profile = new ProfileResponse(
+                            profileResponse.getUsername(),
+                            profileResponse.getBio(),
+                            profileResponse.getImage(),
+                            profileResponse.getFollowing());
 
                     return new ArticleResponse(
                             grpcArticle.getSlug(),
@@ -94,16 +108,13 @@ public class ArticleGrpcClient {
 
     public Page<ArticleResponse> getArticles(final ArticleParam articleParam,
                                              final long loginUserId) {
-        GrpcGetArticlesResponse response = articleStub.getArticles(GrpcGetArticlesRequest.newBuilder()
+        GrpcGetArticlesResponse response = articleStub.getArticles(Common.GrpcPageRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
                 .build());
         log.info("getArticles() : response={}", response);
 
-        PageRequest pageRequest = getPageRequest(articleParam);
-        log.info("getArticles() : pageRequest={}", pageRequest);
-
-        return getArticleResponses(response, pageRequest, loginUserId);
+        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getArticlesByTag(final ArticleParam articleParam,
@@ -115,9 +126,6 @@ public class ArticleGrpcClient {
         List<Long> articleIds = tagResponse.getArticleIdList();
         log.info("getArticlesByTag() : articleIds={}", articleIds);
 
-        PageRequest pageRequest = getPageRequest(articleParam);
-        log.info("getArticles() : pageRequest={}", pageRequest);
-
         GrpcGetArticlesResponse response = articleStub.getArticlesByArticleIds(GrpcArticlesByArticleIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
@@ -125,20 +133,17 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getArticles() : response={}", response);
 
-        return getArticleResponses(response, pageRequest, loginUserId);
+        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getArticlesByAuthor(final ArticleParam articleParam,
                                                         final long loginUserId,
                                                         final String author) {
-        GrpcGetUserIdByUsernameResponse userResponse = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+        Common.GrpcIdResponse userResponse = userStub.getUserIdByUsername(Common.GrpcUsernameRequest.newBuilder()
                 .setUsername(author)
                 .build());
         long userId = userResponse.getId();
         log.info("getArticlesByAuthorIds() : userId={}", userId);
-
-        PageRequest pageRequest = getPageRequest(articleParam);
-        log.info("getArticles() : pageRequest={}", pageRequest);
 
         GrpcGetArticlesResponse response = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
@@ -147,7 +152,7 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getArticlesByAuthorIds() : response={}", response);
 
-        return getArticleResponses(response, pageRequest, loginUserId);
+        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getFeedArticlesByLoginUser(final ArticleParam articleParam, final long loginUserId) {
@@ -156,9 +161,6 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getFeedArticlesByLoginUser() : followResponse={}", followResponse);
 
-        PageRequest pageRequest = getPageRequest(articleParam);
-        log.info("getArticles() : pageRequest={}", pageRequest);
-
         GrpcGetArticlesResponse response = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
@@ -166,6 +168,31 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getArticlesByAuthorIds() : response={}", response);
 
-        return getArticleResponses(response, pageRequest, loginUserId);
+        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
+    }
+
+    public Page<ArticleResponse> getArticlesByFavorited(final ArticleParam articleParam,
+                                                        final long loginUserId,
+                                                        final String favoriteUser) {
+        log.info("getArticlesByFavorited() : favoriteUser={}", favoriteUser);
+
+        Common.GrpcIdResponse userResponse = userStub.getUserIdByUsername(Common.GrpcUsernameRequest.newBuilder()
+                .setUsername(favoriteUser)
+                .build());
+        log.info("getArticlesByFavorited() : userResponse={}", userResponse);
+
+        Common.GrpcIdListResponse favoriteResponse = favoriteStub.getFavoriteArticleIdsByUserId(Common.GrpcIdRequest.newBuilder()
+                .setId(userResponse.getId())
+                .build());
+        log.info("getArticlesByFavorited() : favoriteResponse={}", favoriteResponse);
+
+        GrpcGetArticlesResponse response = articleStub.getArticlesByArticleIds(GrpcArticlesByArticleIdsRequest.newBuilder()
+                .setOffset(articleParam.offset())
+                .setLimit(articleParam.limit())
+                .addAllId(favoriteResponse.getIdList())
+                .build());
+        log.info("getArticlesByAuthorIds() : response={}", response);
+
+        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
     }
 }

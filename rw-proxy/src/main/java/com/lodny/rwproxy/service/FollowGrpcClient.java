@@ -6,8 +6,6 @@ import com.lodny.rwcommon.grpc.follow.GrpcFollowRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameRequest;
-import com.lodny.rwcommon.grpc.rwuser.GrpcGetUserIdByUsernameResponse;
 import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
 import com.lodny.rwproxy.entity.dto.ProfileResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ public class FollowGrpcClient {
 
 
     private long getFolloweeId(final String username) {
-        GrpcGetUserIdByUsernameResponse userResponse = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+        Common.GrpcIdResponse userResponse = userStub.getUserIdByUsername(Common.GrpcUsernameRequest.newBuilder()
                 .setUsername(username)
                 .build());
 

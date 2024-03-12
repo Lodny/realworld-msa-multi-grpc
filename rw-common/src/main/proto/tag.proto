@@ -10,7 +10,7 @@ option java_package = "com.lodny.rwcommon.grpc.tag";
 service Tag {
   rpc registerTags (GrpcRegisterTagsRequest) returns (Empty);
   rpc getTopTagStrings (GrpcTopTagStringsRequest) returns (GrpcTopTagStringsResponse);
-  rpc getTagStringsByArticleId (GrpcTagStringsByArticleIdRequest) returns (GrpcTagStringsByArticleIdResponse);
+  rpc getTagStringsByArticleId (GrpcArticleIdRequest) returns (GrpcTagStringsByArticleIdResponse);
   rpc getArticleIdsByTagString (GrpcArticleIdsByTagStringRequest) returns (GrpcArticleIdsByTagStringResponse);
   rpc deleteTagsByArticleId (GrpcTagsByArticleIdRequest) returns (Empty);
 }
@@ -28,11 +28,6 @@ message GrpcTopTagStringsRequest {
 
 message GrpcTopTagStringsResponse {
   repeated string tags = 1;
-}
-
-
-message GrpcTagStringsByArticleIdRequest {
-  int64 articleId = 1;
 }
 
 message GrpcTagStringsByArticleIdResponse   {

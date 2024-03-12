@@ -10,7 +10,7 @@ option java_package = "com.lodny.rwcommon.grpc.comment";
 
 service Comment {
   rpc registerComment (GrpcRegisterCommentRequest) returns (GrpcCommentResponse);
-  rpc getCommentsByArticleId (GrpcGetCommentsByArticleIdRequest) returns (GrpcGetCommentsByArticleIdResponse);
+  rpc getCommentsByArticleId (GrpcArticleIdRequest) returns (GrpcGetCommentsByArticleIdResponse);
   rpc deleteCommentById (GrpcDeleteCommentByIdRequest) returns (Empty);
 }
 
@@ -29,15 +29,9 @@ message GrpcCommentResponse {
   int64 authorId = 5;
 }
 
-
-message GrpcGetCommentsByArticleIdRequest {
-  int64 articleId = 1;
-}
-
 message GrpcGetCommentsByArticleIdResponse {
   repeated GrpcCommentResponse comments = 1;
 }
-
 
 message GrpcDeleteCommentByIdRequest {
   int64 id = 1;

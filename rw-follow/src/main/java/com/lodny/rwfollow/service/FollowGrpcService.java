@@ -20,11 +20,11 @@ public class FollowGrpcService extends FollowGrpc.FollowImplBase {
     private final FollowRepository followRepository;
 
     @Override
-    public void isFollowing(final GrpcIsFollowingRequest request, final StreamObserver<GrpcIsFollowingResponse> responseObserver) {
+    public void isFollowing(final GrpcIsFollowingRequest request, final StreamObserver<GrpcFollowingResponse> responseObserver) {
         Follow following = followRepository.findById(new FollowId(request.getFolloweeId(), request.getFollowerId()));
         log.info("isFollowing() : following={}", following);
 
-        GrpcIsFollowingResponse response = GrpcIsFollowingResponse.newBuilder()
+        GrpcFollowingResponse response = GrpcFollowingResponse.newBuilder()
                 .setFollowing(following != null)
                 .build();
         log.info("isFollowing() : response={}", response);

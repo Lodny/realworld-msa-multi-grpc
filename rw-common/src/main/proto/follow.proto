@@ -8,7 +8,7 @@ option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.follow";
 
 service Follow {
-  rpc isFollowing (GrpcIsFollowingRequest) returns (GrpcIsFollowingResponse);
+  rpc isFollowing (GrpcIsFollowingRequest) returns (GrpcFollowingResponse);
   rpc follow (GrpcFollowRequest) returns (Empty);
   rpc unfollow (GrpcFollowRequest) returns (Empty);
   rpc getFolloweeIdsByFollowerId (GrpcFollowerIdRequest) returns (GrpcFolloweeIdsResponse);
@@ -20,16 +20,14 @@ message GrpcIsFollowingRequest {
   int64 followerId = 2;
 }
 
-message GrpcIsFollowingResponse {
-  bool following = 1;
-}
-
-
 message GrpcFollowRequest {
   int64 followeeId = 1;
   int64 followerId = 2;
 }
 
+message GrpcFollowingResponse {
+  bool following = 1;
+}
 
 message GrpcFollowerIdRequest {
   int64 followerId = 1;

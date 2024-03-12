@@ -9,26 +9,13 @@ option java_multiple_files = true;
 option java_package = "com.lodny.rwcommon.grpc.article";
 
 service Article {
-  rpc getArticleIdBySlug (GrpcArticleSlugRequest) returns (GrpcGetArticleIdBySlugResponse);
-  rpc getArticleBySlug (GrpcArticleSlugRequest) returns (GrpcGetArticleResponse);
-  rpc deleteArticleBySlug (GrpcArticleSlugRequest) returns (Empty);
-  rpc getArticles (GrpcGetArticlesRequest) returns (GrpcGetArticlesResponse);
+  rpc getArticleIdBySlug (GrpcSlugRequest) returns (GrpcIdResponse);
+  rpc getArticleBySlug (GrpcSlugRequest) returns (GrpcGetArticleResponse);
+  rpc deleteArticleBySlug (GrpcSlugRequest) returns (Empty);
+  rpc getArticles (GrpcPageRequest) returns (GrpcGetArticlesResponse);
   rpc getArticlesByArticleIds (GrpcArticlesByArticleIdsRequest) returns (GrpcGetArticlesResponse);
   rpc getArticlesByAuthorId (GrpcArticlesByAuthorIdRequest) returns (GrpcGetArticlesResponse);
   rpc getArticlesByAuthorIds (GrpcArticlesByAuthorIdsRequest) returns (GrpcGetArticlesResponse);
-}
-
-message GrpcArticleSlugRequest {
-  string slug = 1;
-}
-
-message GrpcGetArticleIdBySlugResponse {
-  int64 id = 1;
-}
-
-message GrpcGetArticlesRequest {
-  int32 offset = 1;
-  int32 limit = 2;
 }
 
 message GrpcGetArticleResponse {

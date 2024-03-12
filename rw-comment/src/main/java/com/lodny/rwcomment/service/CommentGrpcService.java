@@ -45,7 +45,7 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
     }
 
     @Override
-    public void getCommentsByArticleId(final GrpcGetCommentsByArticleIdRequest request,
+    public void getCommentsByArticleId(final Common.GrpcArticleIdRequest request,
                                        final StreamObserver<GrpcGetCommentsByArticleIdResponse> responseObserver) {
         List<Comment> comments = commentRepository.findAllByArticleIdOrderByCreatedAtDesc(request.getArticleId());
         log.info("getComments() : comments={}", comments);

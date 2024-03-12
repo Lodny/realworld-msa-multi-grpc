@@ -36,7 +36,7 @@ public class FollowGrpcClient {
 //
 //
 //    private long getFolloweeId(final String username) {
-//        GrpcGetUserIdByUsernameResponse userIdByUsername = userStub.getUserIdByUsername(GrpcGetUserIdByUsernameRequest.newBuilder()
+//        GrpcIdResponse userIdByUsername = userStub.getUserIdByUsername(GrpcUsernameRequest.newBuilder()
 //                .setUsername(username)
 //                .build());
 //
