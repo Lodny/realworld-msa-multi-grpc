@@ -3,6 +3,7 @@ package com.lodny.rwcomment.grpc;
 import com.lodny.rwcomment.entity.Comment;
 import com.lodny.rwcomment.repository.CommentRepository;
 import com.lodny.rwcommon.grpc.comment.*;
+import com.lodny.rwcommon.grpc.tag.Empty;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,17 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
         log.info("getCommentsByArticleId() : response={}", response);
 
         responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deleteCommentById(final DeleteCommentByIdRequest request, final StreamObserver<Empty> responseObserver) {
+        long commentId = request.getId();
+        log.info("deleteCommentById() : commentId={}", commentId);
+
+        commentRepository.deleteById(commentId);
+
+        responseObserver.onNext(Empty.getDefaultInstance());
         responseObserver.onCompleted();
     }
 }

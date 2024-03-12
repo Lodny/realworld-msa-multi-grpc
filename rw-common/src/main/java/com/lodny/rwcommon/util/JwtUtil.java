@@ -4,11 +4,11 @@ import com.lodny.rwcommon.properties.JwtProperty;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -56,16 +56,13 @@ public class JwtUtil {
         return authString.replace(tokenTitle, "");
     }
 
-    public Claims getClaimsByToken(final String token) {
+    public Claims getClaimsByToken(final String token) throws ExpiredJwtException {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException e) {
-            log.info("getEmailByToken() : 1={}", 1);
-            throw new IllegalArgumentException("The token has expired.");
         } catch (UnsupportedJwtException e) {
             throw new IllegalArgumentException("UnsupportedJwtException");
         } catch (MalformedJwtException e) {

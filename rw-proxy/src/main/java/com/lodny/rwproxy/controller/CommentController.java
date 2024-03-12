@@ -67,17 +67,20 @@ public class CommentController {
         return ResponseEntity.ok(new WrapCommentResponses(comments));
     }
 
-//    @JwtTokenRequired
-//    @DeleteMapping("/comments/{id}")
-//    public ResponseEntity<?> deleteComment(@PathVariable final String slug,
-//                                           @PathVariable final Long id,
-//                                           @LoginUser final LoginInfo loginInfo) {
-//        log.info("deleteComment() : slug={}", slug);
-//        log.info("deleteComment() : comment id={}", id);
-//        log.info("deleteComment() : loginInfo={}", loginInfo);
-//
-//        commentService.deleteComment(slug, id, loginInfo.getUserId());
-//
-//        return ResponseEntity.ok(id);
-//    }
+    @JwtTokenRequired
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<?> deleteComment(@PathVariable final String slug,
+                                           @PathVariable final Long id,
+                                           @LoginUser final LoginInfo loginInfo) {
+        log.info("deleteComment() : slug={}", slug);
+        log.info("deleteComment() : comment id={}", id);
+        log.info("deleteComment() : loginInfo={}", loginInfo);
+
+        Long articleId = commentGrpcClient.getArticleIdBySlug(slug);
+        log.info("registerComment() : articleId={}", articleId);
+
+        commentGrpcClient.deleteComment(articleId, id, loginInfo.getUserId());
+
+        return ResponseEntity.ok(id);
+    }
 }

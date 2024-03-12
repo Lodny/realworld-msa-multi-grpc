@@ -7,6 +7,7 @@ import com.lodny.rwcommon.grpc.comment.*;
 import com.lodny.rwcommon.grpc.profile.GetProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GetProfileByUserIdResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
+import com.lodny.rwcommon.grpc.tag.Empty;
 import com.lodny.rwcommon.util.GrpcTimeUtil;
 import com.lodny.rwproxy.entity.dto.CommentResponse;
 import com.lodny.rwproxy.entity.dto.ProfileResponse;
@@ -81,5 +82,14 @@ public class CommentGrpcClient {
         return comments.getCommentsList().stream()
                 .map(comment -> getCommentResponse(followerId, comment))
                 .toList();
+    }
+
+    public void deleteComment(final Long articleId, final Long commentId, final long userId) {
+        log.info("deleteComment() : articleId={}", articleId);
+
+        Empty empty = commentStub.deleteCommentById(DeleteCommentByIdRequest.newBuilder()
+                .setId(commentId)
+                .build());
+        log.info("deleteComment() : empty={}", empty);
     }
 }

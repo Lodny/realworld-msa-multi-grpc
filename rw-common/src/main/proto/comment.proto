@@ -41,6 +41,8 @@ message GetCommentsByArticleIdResponse {
 
 message DeleteCommentByIdRequest {
   uint64 id = 1;
+  uint64 articleId = 2;
+  uint64 authorId = 3;
 }
 
 //message Empty {}

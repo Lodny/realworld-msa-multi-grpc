@@ -61,15 +61,10 @@ subprojects {
 
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
 
         compileOnly 'org.projectlombok:lombok'
         runtimeOnly 'com.h2database:h2'
         annotationProcessor 'org.projectlombok:lombok'
-
-        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -84,57 +79,94 @@ subprojects {
 project(':rw-common') {
     bootJar { enabled = false }
     jar { enabled = true }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    }
 }
 
-//project(':rw-grpc') {
-//    dependencies {
-//        compileOnly project(':rw-common')
-//    }
-//}
 
 project(':rw-user') {
     dependencies {
-        compileOnly project(':rw-common')
+//        compileOnly project(':rw-common')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     }
 }
 
 
 project(':rw-follow') {
     dependencies {
-        compileOnly project(':rw-common')
+//        compileOnly project(':rw-common')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     }
 }
 
 
 project(':rw-article') {
-//    dependencies {
+    dependencies {
 //        compileOnly project(':rw-common')
-//    }
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    }
 }
 
 
 project(':rw-tag') {
-//    dependencies {
+    dependencies {
 //        compileOnly project(':rw-common')
-//    }
+
+//        implementation 'org.springframework.boot:spring-boot-starter-web'
+//        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+//        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+//        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    }
 }
 
 
 project(':rw-favorite') {
     dependencies {
-        compileOnly project(':rw-common')
+//        compileOnly project(':rw-common')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     }
 }
 
 
 project(':rw-comment') {
     dependencies {
-        compileOnly project(':rw-common')
+//        compileOnly project(':rw-common')
+
+//        implementation 'org.springframework.boot:spring-boot-starter-web'
+//        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+//        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+//        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     }
 }
 
 project(':rw-proxy') {
     dependencies {
-        compileOnly project(':rw-common')
+//        compileOnly project(':rw-common')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     }
 }
