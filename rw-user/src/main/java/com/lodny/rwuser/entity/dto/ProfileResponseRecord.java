@@ -1,7 +1,6 @@
 package com.lodny.rwuser.entity.dto;
 
 import com.lodny.rwuser.entity.RealWorldUser;
-import com.lodny.rwcommon.util.ImageUtil;
 import lombok.Builder;
 
 @Builder
@@ -12,7 +11,7 @@ public record ProfileResponseRecord(
     Boolean following
 ) {
     public ProfileResponseRecord {
-        image = ImageUtil.nullToDefaultImage(image);
+//        image = ImageUtil.nullToDefaultImage(image);
     }
 
     public static ProfileResponseRecord of(final RealWorldUser user, final Boolean following) {

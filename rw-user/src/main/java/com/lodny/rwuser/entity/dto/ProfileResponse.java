@@ -23,7 +23,8 @@ public class ProfileResponse {
         return new ProfileResponse(
                 user.getUsername(),
                 user.getBio(),
-                ImageUtil.nullToDefaultImage(user.getImage()),
+            "",
+//                ImageUtil.nullToDefaultImage(user.getImage()),
                 following);
     }
 }

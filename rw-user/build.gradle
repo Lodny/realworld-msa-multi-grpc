@@ -1,4 +1,7 @@
 dependencies {
     implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
     implementation files('../rw-common/libs/rw-common-1.0-SNAPSHOT-plain.jar')
+
+//    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.2'
 }
