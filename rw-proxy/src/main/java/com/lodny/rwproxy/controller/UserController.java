@@ -1,12 +1,15 @@
 package com.lodny.rwproxy.controller;
 
 import com.lodny.rwproxy.entity.dto.LoginRequest;
+import com.lodny.rwproxy.entity.dto.RegisterUserRequest;
 import com.lodny.rwproxy.entity.dto.UserResponse;
 import com.lodny.rwproxy.entity.wrapper.WrapLoginRequest;
+import com.lodny.rwproxy.entity.wrapper.WrapRegisterUserRequest;
 import com.lodny.rwproxy.entity.wrapper.WrapUserResponse;
 import com.lodny.rwproxy.service.UserGrpcClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,18 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserGrpcClient userGrpcClient;
-//    private final UserService userService;
-//
-//    @PostMapping
-//    public ResponseEntity<?> registerUser(@RequestBody final WrapRegisterUserRequest wrapRegisterUserRequest) {
-//        RegisterUserRequest registerUserRequest = wrapRegisterUserRequest.user();
-//        log.info("registerUser() : registerUserRequest={}", registerUserRequest);
-//
-//        UserResponse userResponse = userService.registerUser(registerUserRequest);
-//        log.info("registerUser() : userResponse={}", userResponse);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapUserResponse(userResponse));
-//    }
+
+    @PostMapping
+    public ResponseEntity<?> registerUser(@RequestBody final WrapRegisterUserRequest wrapRegisterUserRequest) {
+        RegisterUserRequest registerUserRequest = wrapRegisterUserRequest.user();
+        log.info("registerUser() : registerUserRequest={}", registerUserRequest);
+
+        UserResponse userResponse = userGrpcClient.registerUser(registerUserRequest);
+        log.info("registerUser() : userResponse={}", userResponse);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapUserResponse(userResponse));
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody final WrapLoginRequest wrapLoginRequest) {

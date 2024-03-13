@@ -1,5 +1,8 @@
 package com.lodny.rwuser.service;
 
+import com.lodny.rwcommon.grpc.follow.FollowGrpc;
+import com.lodny.rwcommon.grpc.follow.GrpcFollowingResponse;
+import com.lodny.rwcommon.grpc.follow.GrpcIsFollowingRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUsernameRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
@@ -9,6 +12,7 @@ import com.lodny.rwuser.repository.UserRepository;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.Optional;
@@ -19,10 +23,23 @@ import java.util.Optional;
 public class ProfileGrpcService extends ProfileGrpc.ProfileImplBase {
 
     private final UserRepository userRepository;
-    private final FollowGrpcClient followGrpcClient;
+
+    @GrpcClient("follow-grpc")
+    private FollowGrpc.FollowBlockingStub followStub;
+
+    public Boolean isFollowing(final Long followeeId, final Long followerId) {
+        GrpcFollowingResponse response = followStub.isFollowing(GrpcIsFollowingRequest.newBuilder()
+                .setFolloweeId(followeeId)
+                .setFollowerId(followerId)
+                .build());
+        log.info("isFollowing() : response={}", response);
+
+        return response.getFollowing();
+    }
 
     private GrpcProfileResponse getGrpcProfileResponse(final long followeeId, final long followerId, final RealWorldUser foundUser) {
-        Boolean following = followGrpcClient.isFollowing(followeeId, followerId);
+        Boolean following = isFollowing(followeeId, followerId);
+        log.info("getGrpcProfileResponse() : following={}", following);
 
         return GrpcProfileResponse.newBuilder()
                 .setUsername(foundUser.getUsername())

@@ -1,11 +1,8 @@
 package com.lodny.rwuser.entity;
 
-import com.lodny.rwuser.entity.dto.RegisterUserRequest;
-import com.lodny.rwuser.entity.dto.UpdateUserRequest;
-import com.lodny.rwcommon.util.ImageUtil;
+import com.lodny.rwcommon.grpc.rwuser.GrpcRegisterUserRequest;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
@@ -29,30 +26,30 @@ public class RealWorldUser {
     private String image;
 
 
-    public static RealWorldUser of(final RegisterUserRequest request) {
+    public static RealWorldUser of(final GrpcRegisterUserRequest request) {
         return RealWorldUser.builder()
-                .username(request.username())
-                .email(request.email())
-                .password(request.password())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(request.getPassword())
                 .build();
     }
 
-    public void update(final UpdateUserRequest updateUserRequest) {
-        if (StringUtils.hasText(updateUserRequest.email())) {
-            email = updateUserRequest.email();
-        }
-        if (StringUtils.hasText(updateUserRequest.username())) {
-            username = updateUserRequest.username();
-        }
-        if (StringUtils.hasText(updateUserRequest.bio())) {
-            bio = updateUserRequest.bio();
-        }
-        this.image = ImageUtil.defaultImageToNull(image);
-//        final String image = updateUserRequest.image();
-//        if (StringUtils.hasText(image)) {
+//    public void update(final UpdateUserRequest updateUserRequest) {
+//        if (StringUtils.hasText(updateUserRequest.email())) {
+//            email = updateUserRequest.email();
 //        }
-        if (StringUtils.hasText(updateUserRequest.password())) {
-            password = updateUserRequest.password();
-        }
-    }
+//        if (StringUtils.hasText(updateUserRequest.username())) {
+//            username = updateUserRequest.username();
+//        }
+//        if (StringUtils.hasText(updateUserRequest.bio())) {
+//            bio = updateUserRequest.bio();
+//        }
+//        this.image = ImageUtil.defaultImageToNull(image);
+////        final String image = updateUserRequest.image();
+////        if (StringUtils.hasText(image)) {
+////        }
+//        if (StringUtils.hasText(updateUserRequest.password())) {
+//            password = updateUserRequest.password();
+//        }
+//    }
 }

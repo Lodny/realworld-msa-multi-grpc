@@ -1,6 +1,7 @@
 package com.lodny.rwproxy.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lodny.rwcommon.grpc.rwuser.GrpcLoginResponse;
 import com.lodny.rwcommon.util.ImageUtil;
 import lombok.Builder;
 
@@ -17,15 +18,12 @@ public record UserResponse(
         image = ImageUtil.nullToDefaultImage(image);
     }
 
-//    public static UserResponse of(final RealWorldUser user, final String token) {
-//       return UserResponse.builder()
-//               .token(token)
-//               .username(user.getUsername())
-//               .email(user.getEmail())
-//               .bio(user.getBio())
-//               .image(user.getImage())
-//               .id(user.getId())
-//               .user(user)
-//               .build();
-//    }
+    public static UserResponse of(final GrpcLoginResponse grpcUser, final String token) {
+        return new UserResponse(
+                grpcUser.getEmail(),
+                token,
+                grpcUser.getUsername(),
+                grpcUser.getBio(),
+                grpcUser.getImage());
+    }
 }

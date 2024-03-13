@@ -1,9 +1,8 @@
 package com.lodny.rwuser.service;
 
 import com.lodny.rwcommon.grpc.common.Common;
-import com.lodny.rwcommon.grpc.rwuser.GrpcLoginRequest;
-import com.lodny.rwcommon.grpc.rwuser.GrpcLoginResponse;
-import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
+import com.lodny.rwcommon.grpc.rwuser.*;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import com.lodny.rwuser.entity.RealWorldUser;
 import com.lodny.rwuser.repository.UserRepository;
 import io.grpc.stub.StreamObserver;
@@ -31,8 +30,7 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
                 .build();
         log.info("getUserIdByUsername() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
@@ -54,9 +52,30 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
                 .build();
         log.info("login() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
+    @Override
+    public void registerUser(final GrpcRegisterUserRequest request,
+                             final StreamObserver<GrpcLoginResponse> responseObserver) {
+        RealWorldUser newUser = RealWorldUser.of(request);
+        log.info("registerUser() : newUser={}", newUser);
 
+        RealWorldUser savedUser = userRepository.save(newUser);
+        log.info("registerUser() : savedUser={}", savedUser);
+
+        GrpcLoginResponse response = GrpcLoginResponse.newBuilder()
+                .setEmail(savedUser.getEmail())
+                .setUsername(savedUser.getUsername())
+                .setId(savedUser.getId())
+                .build();
+        log.info("registerUser() : response={}", response);
+
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
+    }
+
+    @Override
+    public void updateUser(final GrpcUpdateUserRequest request, final StreamObserver<GrpcLoginResponse> responseObserver) {
+        log.info("updateUser() : 2={}", 2);
+    }
 }
