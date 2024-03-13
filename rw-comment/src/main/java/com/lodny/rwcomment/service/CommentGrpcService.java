@@ -4,7 +4,7 @@ import com.lodny.rwcomment.entity.Comment;
 import com.lodny.rwcomment.repository.CommentRepository;
 import com.lodny.rwcommon.grpc.comment.*;
 import com.lodny.rwcommon.grpc.common.Common;
-import com.lodny.rwcommon.util.GrpcTimeUtil;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +37,8 @@ public class CommentGrpcService extends CommentGrpc.CommentImplBase {
     private GrpcCommentResponse getRegisterCommentResponse(final Comment comment) {
         return GrpcCommentResponse.newBuilder()
                 .setId(comment.getId())
-                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(comment.getCreatedAt()))
-                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(comment.getUpdatedAt()))
+                .setCreatedAt(CommonGrpcUtil.toGrpcTimestamp(comment.getCreatedAt()))
+                .setUpdatedAt(CommonGrpcUtil.toGrpcTimestamp(comment.getUpdatedAt()))
                 .setBody(comment.getBody())
                 .setAuthorId(comment.getAuthorId())
                 .build();

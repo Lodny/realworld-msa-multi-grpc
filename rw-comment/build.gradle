@@ -1,6 +1,6 @@
 dependencies {
-    dependencies {
-        implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
-        implementation files('../rw-common/libs/rw-common-1.0-SNAPSHOT-plain.jar')
-    }
+    compileOnly project(':rw-common')
+
+    implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
+    implementation files('../rw-proto/libs/rw-proto-1.0-SNAPSHOT-plain.jar')
 }

@@ -2,7 +2,7 @@ package com.lodny.rwproxy.controller;
 
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
-import com.lodny.rwcommon.grpc.article.GrpcGetArticleResponse;
+import com.lodny.rwcommon.grpc.article.GrpcArticleResponse;
 import com.lodny.rwcommon.util.LoginInfo;
 import com.lodny.rwproxy.entity.dto.ArticleResponse;
 import com.lodny.rwproxy.entity.wrapper.WrapArticleResponse;
@@ -38,7 +38,7 @@ public class FavoriteController {
         log.info("favorite() : slug={}", slug);
         log.info("favorite() : loginInfo={}", loginInfo);
 
-        GrpcGetArticleResponse grpcArticleResponse = favoriteGrpcClient.favorite(slug, getLoginUserId(loginInfo));
+        GrpcArticleResponse grpcArticleResponse = favoriteGrpcClient.favorite(slug, getLoginUserId(loginInfo));
         log.info("favorite() : grpcArticleResponse={}", grpcArticleResponse);
 
         ArticleResponse articleResponse = articleGrpcClient.getArticleResponse(grpcArticleResponse, getLoginUserId(loginInfo));
@@ -54,7 +54,7 @@ public class FavoriteController {
         log.info("unfavorite() : slug={}", slug);
         log.info("unfavorite() : loginInfo={}", loginInfo);
 
-        GrpcGetArticleResponse grpcArticleResponse = favoriteGrpcClient.unfavorite(slug, getLoginUserId(loginInfo));
+        GrpcArticleResponse grpcArticleResponse = favoriteGrpcClient.unfavorite(slug, getLoginUserId(loginInfo));
         log.info("unfavorite() : grpcArticleResponse={}", grpcArticleResponse);
 
         ArticleResponse articleResponse = articleGrpcClient.getArticleResponse(grpcArticleResponse, getLoginUserId(loginInfo));

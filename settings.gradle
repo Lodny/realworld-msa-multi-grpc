@@ -7,4 +7,5 @@ include 'rw-tag'
 include 'rw-favorite'
 include 'rw-comment'
 include 'rw-proxy'
+include 'rw-proto'
 

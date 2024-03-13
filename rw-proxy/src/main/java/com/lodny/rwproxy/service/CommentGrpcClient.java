@@ -6,7 +6,7 @@ import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileByUserIdRequest;
 import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
-import com.lodny.rwcommon.util.GrpcTimeUtil;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import com.lodny.rwproxy.entity.dto.CommentResponse;
 import com.lodny.rwproxy.entity.dto.ProfileResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +54,8 @@ public class CommentGrpcClient {
 
         return new CommentResponse(
                 comment.getId(),
-                GrpcTimeUtil.toLocalDateTime(comment.getCreatedAt()),
-                GrpcTimeUtil.toLocalDateTime(comment.getUpdatedAt()),
+                CommonGrpcUtil.toLocalDateTime(comment.getCreatedAt()),
+                CommonGrpcUtil.toLocalDateTime(comment.getUpdatedAt()),
                 comment.getBody(),
                 profileResponse);
     }

@@ -4,7 +4,7 @@ import com.lodny.rwarticle.entity.Article;
 import com.lodny.rwarticle.repository.ArticleRepository;
 import com.lodny.rwcommon.grpc.article.*;
 import com.lodny.rwcommon.grpc.common.Common;
-import com.lodny.rwcommon.util.GrpcTimeUtil;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +23,15 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         return PageRequest.of(offset / limit, limit);
     }
 
-    private GrpcGetArticleResponse getGrpcGetArticleResponse(final Article article) {
-        return GrpcGetArticleResponse.newBuilder()
+    private GrpcArticleResponse getGrpcGetArticleResponse(final Article article) {
+        return GrpcArticleResponse.newBuilder()
                 .setId(article.getId())
                 .setSlug(article.getSlug())
                 .setTitle(article.getTitle())
                 .setDescription(article.getDescription())
                 .setBody(article.getBody())
-                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getCreatedAt()))
-                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getUpdatedAt()))
+                .setCreatedAt(CommonGrpcUtil.toGrpcTimestamp(article.getCreatedAt()))
+                .setUpdatedAt(CommonGrpcUtil.toGrpcTimestamp(article.getUpdatedAt()))
                 .setAuthorId(article.getAuthorId())
                 .build();
     }
@@ -46,22 +46,31 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
                 .setTotalElements(articlePage.getTotalElements())
                 .build();
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
+    }
+
+    @Override
+    public void registerArticle(final GrpcRegisterArticleRequest request, final StreamObserver<GrpcArticleResponse> responseObserver) {
+        Article article = Article.of(request);
+        Article savedArticle = articleRepository.save(article);
+
+        GrpcArticleResponse response = getGrpcGetArticleResponse(savedArticle);
+        log.info("registerArticle() : response={}", response);
+
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
     public void getArticleBySlug(final Common.GrpcSlugRequest request,
-                                 final StreamObserver<GrpcGetArticleResponse> responseObserver) {
+                                 final StreamObserver<GrpcArticleResponse> responseObserver) {
         Article foundArticle = articleRepository.findBySlug(request.getSlug())
                 .orElseThrow(() -> new IllegalArgumentException("article not found"));
         log.info("getArticleBySlug() : foundArticle={}", foundArticle);
 
-        GrpcGetArticleResponse response = getGrpcGetArticleResponse(foundArticle);
+        GrpcArticleResponse response = getGrpcGetArticleResponse(foundArticle);
         log.info("getArticleBySlug() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
@@ -76,8 +85,7 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
                 .build();
         log.info("getArticleIdBySlug() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override

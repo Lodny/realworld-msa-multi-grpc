@@ -1,7 +1,7 @@
 package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.article.ArticleGrpc;
-import com.lodny.rwcommon.grpc.article.GrpcGetArticleResponse;
+import com.lodny.rwcommon.grpc.article.GrpcArticleResponse;
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.FavoriteGrpc;
 import com.lodny.rwcommon.grpc.favorite.GrpcFavoriteRequest;
@@ -23,8 +23,8 @@ public class FavoriteGrpcClient {
     @GrpcClient("profile-grpc")
     private ProfileGrpc.ProfileBlockingStub profileStub;
 
-    public GrpcGetArticleResponse favorite(final String slug, final long loginUserId) {
-        GrpcGetArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+    public GrpcArticleResponse favorite(final String slug, final long loginUserId) {
+        GrpcArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
                 .setSlug(slug)
                 .build());
         log.info("favorite() : articleResponse={}", articleResponse);
@@ -39,8 +39,8 @@ public class FavoriteGrpcClient {
                 .build());
     }
 
-    public GrpcGetArticleResponse unfavorite(final String slug, final long loginUserId) {
-        GrpcGetArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+    public GrpcArticleResponse unfavorite(final String slug, final long loginUserId) {
+        GrpcArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
                 .setSlug(slug)
                 .build());
         log.info("unfavorite() : articleResponse={}", articleResponse);

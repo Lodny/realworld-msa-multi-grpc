@@ -2,6 +2,7 @@ package com.lodny.rwfavorite.service;
 
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.*;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import com.lodny.rwfavorite.entity.Favorite;
 import com.lodny.rwfavorite.entity.FavoriteId;
 import com.lodny.rwfavorite.repository.FavoriteRepository;
@@ -19,11 +20,6 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
 
     private final FavoriteRepository favoriteRepository;
 
-    private <T> void completeResponseObserver(final StreamObserver<T> responseObserver, T response) {
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-    }
-
     @Override
     public void favorite(final GrpcFavoriteRequest request, final StreamObserver<Common.Empty> responseObserver) {
         FavoriteId favoriteId = new FavoriteId(request.getArticleId(), request.getUserId());
@@ -31,7 +27,7 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
 
         favoriteRepository.save(new Favorite(favoriteId));
 
-        completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
+        CommonGrpcUtil.completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
     }
 
     @Override
@@ -41,7 +37,7 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
 
         favoriteRepository.deleteById(favoriteId);
 
-        completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
+        CommonGrpcUtil.completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
     }
 
     @Override
@@ -62,7 +58,7 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
                 .build();
         log.info("getFavoriteInfo() : response={}", response);
 
-        completeResponseObserver(responseObserver, response);
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
@@ -76,6 +72,6 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
                 .build();
         log.info("getFavoriteArticleIdsByUserId() : response={}", response);
 
-        completeResponseObserver(responseObserver, response);
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 }

@@ -1,4 +1,4 @@
-package com.lodny.rwarticle.entity.dto;
+package com.lodny.rwproxy.entity.dto;
 
 import org.springframework.util.Assert;
 

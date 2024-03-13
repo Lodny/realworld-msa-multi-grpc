@@ -1,6 +1,6 @@
 package com.lodny.rwarticle.entity;
 
-import com.lodny.rwarticle.entity.dto.RegisterArticleRequest;
+import com.lodny.rwcommon.grpc.article.GrpcRegisterArticleRequest;
 import com.lodny.rwcommon.util.SlugUtil;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,11 +30,6 @@ public class Article {
     private String description;
     private String body;
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(name = "article_tag")
-//    @Column(name = "tag")
-//    private Set<String> tagList;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -44,14 +39,13 @@ public class Article {
 
     private Long authorId;
 
-    public static Article of(final RegisterArticleRequest request, final Long authorId) {
+    public static Article of(final GrpcRegisterArticleRequest request) {
         return Article.builder()
-                .slug(SlugUtil.createSlug(request.title()))
-                .title(request.title())
-                .description(request.description())
-                .body(request.body())
-//                .tagList(request.tagList())
-                .authorId(authorId)
+                .slug(SlugUtil.createSlug(request.getTitle()))
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .body(request.getBody())
+                .authorId(request.getAuthorId())
                 .build();
     }
 }

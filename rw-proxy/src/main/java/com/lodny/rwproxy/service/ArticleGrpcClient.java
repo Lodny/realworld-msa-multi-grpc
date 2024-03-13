@@ -13,10 +13,11 @@ import com.lodny.rwcommon.grpc.profile.GrpcProfileResponse;
 import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import com.lodny.rwcommon.grpc.rwuser.RwUserGrpc;
 import com.lodny.rwcommon.grpc.tag.*;
-import com.lodny.rwcommon.util.GrpcTimeUtil;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import com.lodny.rwproxy.entity.dto.ArticleParam;
 import com.lodny.rwproxy.entity.dto.ArticleResponse;
 import com.lodny.rwproxy.entity.dto.ProfileResponse;
+import com.lodny.rwproxy.entity.dto.RegisterArticleRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -58,7 +59,7 @@ public class ArticleGrpcClient {
         return PageRequest.of(pageNo, pageSize);
     }
 
-    public ArticleResponse getArticleResponse(final GrpcGetArticleResponse grpcArticle, final long loginUserId) {
+    public ArticleResponse getArticleResponse(final GrpcArticleResponse grpcArticle, final long loginUserId) {
         GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
                 .setArticleId(grpcArticle.getId())
                 .build());
@@ -90,33 +91,33 @@ public class ArticleGrpcClient {
                 grpcArticle.getDescription(),
                 grpcArticle.getBody(),
                 new HashSet<>(tagResponse.getTagsList()),
-                GrpcTimeUtil.toLocalDateTime(grpcArticle.getCreatedAt()),
-                GrpcTimeUtil.toLocalDateTime(grpcArticle.getUpdatedAt()),
+                CommonGrpcUtil.toLocalDateTime(grpcArticle.getCreatedAt()),
+                CommonGrpcUtil.toLocalDateTime(grpcArticle.getUpdatedAt()),
                 favorited,
                 favoritesCount,
                 profile);
     }
 
-    private PageImpl<ArticleResponse> getArticleResponses(final GrpcGetArticlesResponse response,
+    private PageImpl<ArticleResponse> getArticleResponses(final GrpcGetArticlesResponse grpcArticles,
                                                           final PageRequest pageRequest,
                                                           final long loginUserId) {
-        List<ArticleResponse> articleResponses = response.getArticleList().stream()
+        List<ArticleResponse> articleResponses = grpcArticles.getArticleList().stream()
                 .map(grpcArticle -> getArticleResponse(grpcArticle, loginUserId))
                 .toList();
         log.info("getArticles() : articleResponses={}", articleResponses);
 
-        return new PageImpl<>(articleResponses, pageRequest, response.getTotalElements());
+        return new PageImpl<>(articleResponses, pageRequest, grpcArticles.getTotalElements());
     }
 
     public Page<ArticleResponse> getArticles(final ArticleParam articleParam,
                                              final long loginUserId) {
-        GrpcGetArticlesResponse response = articleStub.getArticles(Common.GrpcPageRequest.newBuilder()
+        GrpcGetArticlesResponse grpcArticles = articleStub.getArticles(Common.GrpcPageRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
                 .build());
-        log.info("getArticles() : response={}", response);
+        log.info("getArticles() : grpcArticles={}", grpcArticles);
 
-        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
+        return getArticleResponses(grpcArticles, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getArticlesByTag(final ArticleParam articleParam,
@@ -147,14 +148,14 @@ public class ArticleGrpcClient {
         long userId = userResponse.getId();
         log.info("getArticlesByAuthorIds() : userId={}", userId);
 
-        GrpcGetArticlesResponse response = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
+        GrpcGetArticlesResponse grpcArticle = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
                 .addAllAuthorId(List.of(userId))
                 .build());
-        log.info("getArticlesByAuthorIds() : response={}", response);
+        log.info("getArticlesByAuthorIds() : grpcArticle={}", grpcArticle);
 
-        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
+        return getArticleResponses(grpcArticle, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getFeedArticlesByLoginUser(final ArticleParam articleParam, final long loginUserId) {
@@ -163,14 +164,14 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getFeedArticlesByLoginUser() : followResponse={}", followResponse);
 
-        GrpcGetArticlesResponse response = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
+        GrpcGetArticlesResponse grpcArticles = articleStub.getArticlesByAuthorIds(GrpcArticlesByAuthorIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
                 .addAllAuthorId(followResponse.getFolloweeIdList())
                 .build());
-        log.info("getArticlesByAuthorIds() : response={}", response);
+        log.info("getArticlesByAuthorIds() : grpcArticles={}", grpcArticles);
 
-        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
+        return getArticleResponses(grpcArticles, getPageRequest(articleParam), loginUserId);
     }
 
     public Page<ArticleResponse> getArticlesByFavorited(final ArticleParam articleParam,
@@ -188,13 +189,35 @@ public class ArticleGrpcClient {
                 .build());
         log.info("getArticlesByFavorited() : favoriteResponse={}", favoriteResponse);
 
-        GrpcGetArticlesResponse response = articleStub.getArticlesByArticleIds(GrpcArticlesByArticleIdsRequest.newBuilder()
+        GrpcGetArticlesResponse grpcArticles = articleStub.getArticlesByArticleIds(GrpcArticlesByArticleIdsRequest.newBuilder()
                 .setOffset(articleParam.offset())
                 .setLimit(articleParam.limit())
                 .addAllId(favoriteResponse.getIdList())
                 .build());
-        log.info("getArticlesByAuthorIds() : response={}", response);
+        log.info("getArticlesByAuthorIds() : grpcArticles={}", grpcArticles);
 
-        return getArticleResponses(response, getPageRequest(articleParam), loginUserId);
+        return getArticleResponses(grpcArticles, getPageRequest(articleParam), loginUserId);
+    }
+
+    public ArticleResponse getArticleBySlug(final String slug, final long loginUserId) {
+        GrpcArticleResponse grpcArticle = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+        log.info("getArticleBySlug() : grpcArticle={}", grpcArticle);
+
+        return getArticleResponse(grpcArticle, loginUserId);
+    }
+
+    public ArticleResponse registerArticle(final RegisterArticleRequest registerArticleRequest, final long loginUserId) {
+        GrpcArticleResponse grpcArticle = articleStub.registerArticle(GrpcRegisterArticleRequest.newBuilder()
+                .setTitle(registerArticleRequest.title())
+                .setDescription(registerArticleRequest.description())
+                .setBody(registerArticleRequest.body())
+                .addAllTagList(registerArticleRequest.tagList())
+                .setAuthorId(loginUserId)
+                .build());
+        log.info("registerArticle() : grpcArticle={}", grpcArticle);
+
+        return getArticleResponse(grpcArticle, loginUserId);
     }
 }
