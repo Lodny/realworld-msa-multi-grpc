@@ -23,24 +23,42 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         return PageRequest.of(offset / limit, limit);
     }
 
+    private GrpcGetArticleResponse getGrpcGetArticleResponse(final Article article) {
+        return GrpcGetArticleResponse.newBuilder()
+                .setId(article.getId())
+                .setSlug(article.getSlug())
+                .setTitle(article.getTitle())
+                .setDescription(article.getDescription())
+                .setBody(article.getBody())
+                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getCreatedAt()))
+                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getUpdatedAt()))
+                .setAuthorId(article.getAuthorId())
+                .build();
+    }
+
     private void convertGrpcResponse(final StreamObserver<GrpcGetArticlesResponse> responseObserver, final Page<Article> articlePage) {
         GrpcGetArticlesResponse response = GrpcGetArticlesResponse.newBuilder()
                 .addAllArticle(articlePage.getContent().stream()
-                        .map(article -> GrpcGetArticleResponse.newBuilder()
-                                .setId(article.getId())
-                                .setSlug(article.getSlug())
-                                .setTitle(article.getTitle())
-                                .setDescription(article.getDescription())
-                                .setBody(article.getBody())
-                                .setCreatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getCreatedAt()))
-                                .setUpdatedAt(GrpcTimeUtil.toGrpcTimestamp(article.getUpdatedAt()))
-                                .setAuthorId(article.getAuthorId())
-                                .build())
+                        .map(this::getGrpcGetArticleResponse)
                         .toList())
                 .setCurrentPage(articlePage.getNumber())
                 .setTotalPages(articlePage.getTotalPages())
                 .setTotalElements(articlePage.getTotalElements())
                 .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getArticleBySlug(final Common.GrpcSlugRequest request,
+                                 final StreamObserver<GrpcGetArticleResponse> responseObserver) {
+        Article foundArticle = articleRepository.findBySlug(request.getSlug())
+                .orElseThrow(() -> new IllegalArgumentException("article not found"));
+        log.info("getArticleBySlug() : foundArticle={}", foundArticle);
+
+        GrpcGetArticleResponse response = getGrpcGetArticleResponse(foundArticle);
+        log.info("getArticleBySlug() : response={}", response);
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

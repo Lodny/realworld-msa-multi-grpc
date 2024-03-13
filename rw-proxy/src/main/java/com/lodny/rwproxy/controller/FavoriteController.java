@@ -2,16 +2,17 @@ package com.lodny.rwproxy.controller;
 
 import com.lodny.rwcommon.annotation.JwtTokenRequired;
 import com.lodny.rwcommon.annotation.LoginUser;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleResponse;
 import com.lodny.rwcommon.util.LoginInfo;
+import com.lodny.rwproxy.entity.dto.ArticleResponse;
+import com.lodny.rwproxy.entity.wrapper.WrapArticleResponse;
+import com.lodny.rwproxy.service.ArticleGrpcClient;
 import com.lodny.rwproxy.service.FavoriteGrpcClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FavoriteController {
 
     private final FavoriteGrpcClient favoriteGrpcClient;
+    private final ArticleGrpcClient articleGrpcClient;
 
     private String getToken(final LoginInfo loginInfo) {
         return loginInfo != null ? loginInfo.getToken() : "";
@@ -36,24 +38,28 @@ public class FavoriteController {
         log.info("favorite() : slug={}", slug);
         log.info("favorite() : loginInfo={}", loginInfo);
 
-//        WrapArticleResponse wrapArticleResponse = favoriteService.favorite(slug, getLoginUserId(loginInfo), getToken(loginInfo));
-//        log.info("favorite() : wrapArticleResponse.article()={}", wrapArticleResponse.article());
+        GrpcGetArticleResponse grpcArticleResponse = favoriteGrpcClient.favorite(slug, getLoginUserId(loginInfo));
+        log.info("favorite() : grpcArticleResponse={}", grpcArticleResponse);
 
-//        return ResponseEntity.status(HttpStatus.CREATED).body(wrapArticleResponse);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
+        ArticleResponse articleResponse = articleGrpcClient.getArticleResponse(grpcArticleResponse, getLoginUserId(loginInfo));
+        log.info("favorite() : articleResponse={}", articleResponse);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new WrapArticleResponse(articleResponse));
     }
 
-//    @JwtTokenRequired
-//    @DeleteMapping("/articles/{slug}/favorite")
-//    public ResponseEntity<?> unfavorite(@PathVariable final String slug,
-//                                        @LoginUser final LoginInfo loginInfo) {
-//        log.info("unfavorite() : slug={}", slug);
-//        log.info("unfavorite() : loginInfo={}", loginInfo);
-//
-//        WrapArticleResponse wrapArticleResponse = favoriteService.unfavorite(slug, getLoginUserId(loginInfo), getToken(loginInfo));
-//        log.info("unfavorite() : wrapArticleResponse.article()={}", wrapArticleResponse.article());
-//
-//        return ResponseEntity.ok(wrapArticleResponse);
-//    }
+    @JwtTokenRequired
+    @DeleteMapping("/articles/{slug}/favorite")
+    public ResponseEntity<?> unfavorite(@PathVariable final String slug,
+                                        @LoginUser final LoginInfo loginInfo) {
+        log.info("unfavorite() : slug={}", slug);
+        log.info("unfavorite() : loginInfo={}", loginInfo);
 
+        GrpcGetArticleResponse grpcArticleResponse = favoriteGrpcClient.unfavorite(slug, getLoginUserId(loginInfo));
+        log.info("unfavorite() : grpcArticleResponse={}", grpcArticleResponse);
+
+        ArticleResponse articleResponse = articleGrpcClient.getArticleResponse(grpcArticleResponse, getLoginUserId(loginInfo));
+        log.info("unfavorite() : articleResponse={}", articleResponse);
+
+        return ResponseEntity.ok(new WrapArticleResponse(articleResponse));
+    }
 }

@@ -83,15 +83,11 @@ public class ArticleController {
         final var loginUserId = getLoginUserId(loginInfo);
         log.info("getArticles() : loginUserId={}", loginUserId);
 
-        final var token = getTokenByLoginInfo(loginInfo);
-
         final Page<ArticleResponse> pageArticles =
                 switch (articleParam.type()) {
                     case "tag"       -> articleGrpcClient.getArticlesByTag(articleParam, loginUserId, articleParam.tag());
                     case "author"    -> articleGrpcClient.getArticlesByAuthor(articleParam, loginUserId, articleParam.author());
                     case "favorited" -> articleGrpcClient.getArticlesByFavorited(articleParam, loginUserId, articleParam.favorited());
-//                    default          -> articleGrpcClient.getArticles(articleParam, loginUserId, token);
-//                    default          -> articleService.getArticles(pageRequest, loginUserId, token);
                     default          -> articleGrpcClient.getArticles(articleParam, loginUserId);
                 };
         log.info("getArticles() : pageArticles={}", pageArticles);
@@ -110,14 +106,5 @@ public class ArticleController {
 //
 //        return ResponseEntity.ok(1);
 //    }
-//
-//    @GetMapping("/{slug}/id")
-//    public ResponseEntity<?> getArticleIdBySlug(@PathVariable final String slug) {
-//        log.info("getArticleIdBySlug() : slug={}", slug);
-//
-//        Long articleId = articleService.getArticleIdBySlug(slug);
-//        log.info("getArticleIdBySlug() : articleId={}", articleId);
-//
-//        return ResponseEntity.ok(articleId);
-//    }
+
 }

@@ -51,55 +51,57 @@ public class ArticleGrpcClient {
     @GrpcClient("profile-grpc")
     private ProfileGrpc.ProfileBlockingStub profileStub;
 
-    private static PageRequest getPageRequest(final ArticleParam articleParam) {
+    private PageRequest getPageRequest(final ArticleParam articleParam) {
         int pageSize = articleParam.limit();
         int pageNo = articleParam.offset() / pageSize;
 
         return PageRequest.of(pageNo, pageSize);
     }
 
+    public ArticleResponse getArticleResponse(final GrpcGetArticleResponse grpcArticle, final long loginUserId) {
+        GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
+                .setArticleId(grpcArticle.getId())
+                .build());
+        log.info("getArticleResponses() : tagResponse={}", tagResponse);
+
+        GrpcGetFavoriteInfoResponse favoriteResponse = favoriteStub.getFavoriteInfo(GrpcFavoriteRequest.newBuilder()
+                .setArticleId(grpcArticle.getId())
+                .setUserId(loginUserId)
+                .build());
+        log.info("getArticleResponses() : favoriteResponse={}", favoriteResponse);
+
+        Boolean favorited = favoriteResponse.getFavorited() == 1L;
+        Long favoritesCount = favoriteResponse.getFavoritesCount();
+
+        GrpcProfileResponse profileResponse = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
+                .setUserId(grpcArticle.getAuthorId())
+                .setFollowerId(loginUserId)
+                .build());
+        log.info("getArticleResponses() : profileResponse={}", profileResponse);
+        ProfileResponse profile = new ProfileResponse(
+                profileResponse.getUsername(),
+                profileResponse.getBio(),
+                profileResponse.getImage(),
+                profileResponse.getFollowing());
+
+        return new ArticleResponse(
+                grpcArticle.getSlug(),
+                grpcArticle.getTitle(),
+                grpcArticle.getDescription(),
+                grpcArticle.getBody(),
+                new HashSet<>(tagResponse.getTagsList()),
+                GrpcTimeUtil.toLocalDateTime(grpcArticle.getCreatedAt()),
+                GrpcTimeUtil.toLocalDateTime(grpcArticle.getUpdatedAt()),
+                favorited,
+                favoritesCount,
+                profile);
+    }
+
     private PageImpl<ArticleResponse> getArticleResponses(final GrpcGetArticlesResponse response,
                                                           final PageRequest pageRequest,
                                                           final long loginUserId) {
         List<ArticleResponse> articleResponses = response.getArticleList().stream()
-                .map(grpcArticle -> {
-                    GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
-                            .setArticleId(grpcArticle.getId())
-                            .build());
-                    log.info("getArticleResponses() : tagResponse={}", tagResponse);
-
-                    GrpcGetFavoriteInfoResponse favoriteResponse = favoriteStub.getFavoriteInfo(GrpcFavoriteRequest.newBuilder()
-                            .setArticleId(grpcArticle.getId())
-                            .setUserId(loginUserId)
-                            .build());
-                    log.info("getArticleResponses() : favoriteResponse={}", favoriteResponse);
-
-                    Boolean favorited = favoriteResponse.getFavorited() == 1L;
-                    Long favoritesCount = favoriteResponse.getFavoritesCount();
-
-                    GrpcProfileResponse profileResponse = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
-                            .setUserId(grpcArticle.getAuthorId())
-                            .setFollowerId(loginUserId)
-                            .build());
-                    log.info("getArticleResponses() : profileResponse={}", profileResponse);
-                    ProfileResponse profile = new ProfileResponse(
-                            profileResponse.getUsername(),
-                            profileResponse.getBio(),
-                            profileResponse.getImage(),
-                            profileResponse.getFollowing());
-
-                    return new ArticleResponse(
-                            grpcArticle.getSlug(),
-                            grpcArticle.getTitle(),
-                            grpcArticle.getDescription(),
-                            grpcArticle.getBody(),
-                            new HashSet<>(tagResponse.getTagsList()),
-                            GrpcTimeUtil.toLocalDateTime(grpcArticle.getCreatedAt()),
-                            GrpcTimeUtil.toLocalDateTime(grpcArticle.getUpdatedAt()),
-                            favorited,
-                            favoritesCount,
-                            profile);
-                })
+                .map(grpcArticle -> getArticleResponse(grpcArticle, loginUserId))
                 .toList();
         log.info("getArticles() : articleResponses={}", articleResponses);
 

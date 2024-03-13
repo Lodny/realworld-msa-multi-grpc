@@ -19,14 +19,29 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
 
     private final FavoriteRepository favoriteRepository;
 
+    private <T> void completeResponseObserver(final StreamObserver<T> responseObserver, T response) {
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
     @Override
     public void favorite(final GrpcFavoriteRequest request, final StreamObserver<Common.Empty> responseObserver) {
-        log.info("favorite() : 1={}", 1);
+        FavoriteId favoriteId = new FavoriteId(request.getArticleId(), request.getUserId());
+        log.info("favorite() : favoriteId={}", favoriteId);
+
+        favoriteRepository.save(new Favorite(favoriteId));
+
+        completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
     }
 
     @Override
     public void unfavorite(final GrpcFavoriteRequest request, final StreamObserver<Common.Empty> responseObserver) {
-        log.info("unfavorite() : 1={}", 1);
+        FavoriteId favoriteId = new FavoriteId(request.getArticleId(), request.getUserId());
+        log.info("unfavorite() : favoriteId={}", favoriteId);
+
+        favoriteRepository.deleteById(favoriteId);
+
+        completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
     }
 
     @Override
@@ -47,8 +62,7 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
                 .build();
         log.info("getFavoriteInfo() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        completeResponseObserver(responseObserver, response);
     }
 
     @Override
@@ -62,7 +76,6 @@ public class FavoriteGrpcService extends FavoriteGrpc.FavoriteImplBase {
                 .build();
         log.info("getFavoriteArticleIdsByUserId() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        completeResponseObserver(responseObserver, response);
     }
 }

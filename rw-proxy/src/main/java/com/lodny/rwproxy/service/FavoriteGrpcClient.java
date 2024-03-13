@@ -1,6 +1,11 @@
 package com.lodny.rwproxy.service;
 
+import com.lodny.rwcommon.grpc.article.ArticleGrpc;
+import com.lodny.rwcommon.grpc.article.GrpcGetArticleResponse;
+import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.favorite.FavoriteGrpc;
+import com.lodny.rwcommon.grpc.favorite.GrpcFavoriteRequest;
+import com.lodny.rwcommon.grpc.profile.ProfileGrpc;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -12,61 +17,41 @@ public class FavoriteGrpcClient {
     @GrpcClient("favorite-grpc")
     private FavoriteGrpc.FavoriteBlockingStub favoriteStub;
 
-//    @GrpcClient("profile-grpc")
-//    private ProfileGrpc.ProfileBlockingStub profileStub;
-//
-//    @GrpcClient("user-grpc")
-//    private RwUserGrpc.RwUserBlockingStub userStub;
+    @GrpcClient("article-grpc")
+    private ArticleGrpc.ArticleBlockingStub articleStub;
 
+    @GrpcClient("profile-grpc")
+    private ProfileGrpc.ProfileBlockingStub profileStub;
 
-//    private long getFolloweeId(final String username) {
-//        GrpcIdResponse userIdByUsername = userStub.getUserIdByUsername(GrpcUsernameRequest.newBuilder()
-//                .setUsername(username)
-//                .build());
-//
-//        return userIdByUsername.getUserId();
-//    }
-//
-//    private ProfileResponse getProfileResponse(final long followerId, final long followeeId) {
-//        GrpcProfileResponse grpcProfile = profileStub.getProfileByUserId(GrpcProfileByUserIdRequest.newBuilder()
-//                .setUserId(followeeId)
-//                .setFollowerId(followerId)
-//                .build());
-//
-//        return new ProfileResponse(
-//                grpcProfile.getUsername(),
-//                grpcProfile.getBio(),
-//                grpcProfile.getImage(),
-//                grpcProfile.getFollowing());
-//    }
-//
-//    public ProfileResponse follow(final String username, final long followerId) {
-//        log.info("follow() : followerId={}", followerId);
-//
-//        long followeeId = getFolloweeId(username);
-//        log.info("follow() : followeeId={}", followeeId);
-//
-//        Common.Empty empty = followStub.follow(GrpcFollowRequest.newBuilder()
-//                .setFolloweeId(followeeId)
-//                .setFollowerId(followerId)
-//                .build());
-//        log.info("follow() : empty={}", empty);
-//
-//        return getProfileResponse(followerId, followeeId);
-//    }
-//
-//    public ProfileResponse unfollow(final String username, final long followerId) {
-//        log.info("unfollow() : followerId={}", followerId);
-//
-//        long followeeId = getFolloweeId(username);
-//        log.info("unfollow() : followeeId={}", followeeId);
-//
-//        Common.Empty empty = followStub.unfollow(GrpcFollowRequest.newBuilder()
-//                .setFolloweeId(followeeId)
-//                .setFollowerId(followerId)
-//                .build());
-//        log.info("unfollow() : empty={}", empty);
-//
-//        return getProfileResponse(followerId, followeeId);
-//    }
+    public GrpcGetArticleResponse favorite(final String slug, final long loginUserId) {
+        GrpcGetArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+        log.info("favorite() : articleResponse={}", articleResponse);
+
+        favoriteStub.favorite(GrpcFavoriteRequest.newBuilder()
+                .setArticleId(articleResponse.getId())
+                .setUserId(loginUserId)
+                .build());
+
+        return articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+    }
+
+    public GrpcGetArticleResponse unfavorite(final String slug, final long loginUserId) {
+        GrpcGetArticleResponse articleResponse = articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+        log.info("unfavorite() : articleResponse={}", articleResponse);
+
+        favoriteStub.unfavorite(GrpcFavoriteRequest.newBuilder()
+                .setArticleId(articleResponse.getId())
+                .setUserId(loginUserId)
+                .build());
+
+        return articleStub.getArticleBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+    }
 }
