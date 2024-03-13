@@ -4,3 +4,11 @@ dependencies {
     implementation 'net.devh:grpc-spring-boot-starter:3.0.0.RELEASE'
     implementation files('../rw-proto/libs/rw-proto-1.0-SNAPSHOT-plain.jar')
 }
+
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs += project(':rw-proto').file('build/generated/source/proto/main').absolutePath
+//        }
+//    }
+//}
