@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package com.lodny.rwcommon.grpc;
+
+import "google/protobuf/timestamp.proto";
+import "common.proto";
+
+option java_multiple_files = true;
+option java_package = "com.lodny.rwcommon.grpc.comment";
+
+service Comment {
+  rpc registerComment (GrpcRegisterCommentRequest) returns (GrpcCommentResponse);
+  rpc getCommentsByArticleId (GrpcArticleIdRequest) returns (GrpcGetCommentsByArticleIdResponse);
+  rpc deleteCommentById (GrpcDeleteCommentByIdRequest) returns (Empty);
+}
+
+
+message GrpcRegisterCommentRequest {
+  int64 authorId = 1;
+  int64 articleId = 2;
+  string body = 3;
+}
+
+message GrpcCommentResponse {
+  int64 id = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  google.protobuf.Timestamp updatedAt = 3;
+  string body = 4;
+  int64 authorId = 5;
+}
+
+message GrpcGetCommentsByArticleIdResponse {
+  repeated GrpcCommentResponse comments = 1;
+}
+
+message GrpcDeleteCommentByIdRequest {
+  int64 id = 1;
+  int64 articleId = 2;
+  int64 authorId = 3;
+}
+
+//message Empty {}
