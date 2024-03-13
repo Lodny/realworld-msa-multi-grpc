@@ -1,8 +1,11 @@
 package com.lodny.rwuser.entity;
 
 import com.lodny.rwcommon.grpc.rwuser.GrpcRegisterUserRequest;
+import com.lodny.rwcommon.grpc.rwuser.GrpcUpdateUserRequest;
+import com.lodny.rwcommon.util.ImageUtil;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
@@ -34,22 +37,23 @@ public class RealWorldUser {
                 .build();
     }
 
-//    public void update(final UpdateUserRequest updateUserRequest) {
-//        if (StringUtils.hasText(updateUserRequest.email())) {
-//            email = updateUserRequest.email();
-//        }
-//        if (StringUtils.hasText(updateUserRequest.username())) {
-//            username = updateUserRequest.username();
-//        }
-//        if (StringUtils.hasText(updateUserRequest.bio())) {
-//            bio = updateUserRequest.bio();
-//        }
-//        this.image = ImageUtil.defaultImageToNull(image);
-////        final String image = updateUserRequest.image();
-////        if (StringUtils.hasText(image)) {
-////        }
-//        if (StringUtils.hasText(updateUserRequest.password())) {
-//            password = updateUserRequest.password();
-//        }
-//    }
+    public void update(final GrpcUpdateUserRequest grpcRequest) {
+        if (StringUtils.hasText(grpcRequest.getEmail()))
+            email = grpcRequest.getEmail();
+
+        if (StringUtils.hasText(grpcRequest.getUsername()))
+            username = grpcRequest.getUsername();
+
+        if (StringUtils.hasText(grpcRequest.getPassword()))
+            password = grpcRequest.getPassword();
+
+        if (StringUtils.hasText(grpcRequest.getBio()))
+            bio = grpcRequest.getBio();
+
+        if (StringUtils.hasText(grpcRequest.getBio()))
+            bio = grpcRequest.getBio();
+
+        image = grpcRequest.getImage();
+        image = ImageUtil.defaultImageToNull(image);
+    }
 }

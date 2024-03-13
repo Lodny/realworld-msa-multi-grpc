@@ -32,6 +32,7 @@ message GrpcUpdateUserRequest {
   optional string password = 3;
   optional string bio = 4;
   optional string image = 5;
+  int64 userId = 6;
 }
 
 message GrpcLoginResponse {

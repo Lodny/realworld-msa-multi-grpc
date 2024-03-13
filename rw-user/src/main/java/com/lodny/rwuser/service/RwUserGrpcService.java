@@ -19,6 +19,16 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
 
     private final UserRepository userRepository;
 
+    private static GrpcLoginResponse getGrpcLoginResponse(final RealWorldUser foundUser) {
+        return GrpcLoginResponse.newBuilder()
+                .setEmail(foundUser.getEmail())
+                .setUsername(foundUser.getUsername())
+                .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
+                .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
+                .setId(foundUser.getId())
+                .build();
+    }
+
     @Override
     public void getUserIdByUsername(final Common.GrpcUsernameRequest request,
                                     final StreamObserver<Common.GrpcIdResponse> responseObserver) {
@@ -43,13 +53,7 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
         if (! foundUser.getPassword().equals(request.getPassword()))
             throw new IllegalArgumentException("email or password is invalid");
 
-        GrpcLoginResponse response = GrpcLoginResponse.newBuilder()
-                .setEmail(foundUser.getEmail())
-                .setUsername(foundUser.getUsername())
-                .setBio(Optional.ofNullable(foundUser.getBio()).orElse(""))
-                .setImage(Optional.ofNullable(foundUser.getImage()).orElse(""))
-                .setId(foundUser.getId())
-                .build();
+        GrpcLoginResponse response = getGrpcLoginResponse(foundUser);
         log.info("login() : response={}", response);
 
         CommonGrpcUtil.completeResponseObserver(responseObserver, response);
@@ -76,6 +80,21 @@ public class RwUserGrpcService extends RwUserGrpc.RwUserImplBase {
 
     @Override
     public void updateUser(final GrpcUpdateUserRequest request, final StreamObserver<GrpcLoginResponse> responseObserver) {
-        log.info("updateUser() : 2={}", 2);
+        RealWorldUser foundUser = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("user not found"));
+        log.info("updateUser() : foundUser={}", foundUser);
+
+        if (! foundUser.getEmail().equals(request.getEmail()))
+            throw new IllegalArgumentException("userId is wrong");
+
+        foundUser.update(request);
+        log.info("updateUser() : foundUser={}", foundUser);
+        RealWorldUser savedUser = userRepository.save(foundUser);
+        log.info("updateUser() : savedUser={}", savedUser);
+
+        GrpcLoginResponse response = getGrpcLoginResponse(savedUser);
+        log.info("updateUser() : response={}", response);
+
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 }
