@@ -115,4 +115,17 @@ public class ArticleGrpcService extends ArticleGrpc.ArticleImplBase {
         Page<Article> articlePage = articleRepository.findAllByAuthorIdInOrderByCreatedAtDesc(request.getAuthorIdList(), pageRequest);
         convertGrpcResponse(responseObserver, articlePage);
     }
+
+    @Override
+    public void deleteArticleBySlug(final GrpcSlugAuthorIdRequest request, final StreamObserver<Common.Empty> responseObserver) {
+        Article foundArticle = articleRepository.findBySlug(request.getSlug())
+                .orElseThrow(() -> new IllegalArgumentException("article not found"));
+        log.info("deleteArticleBySlug() : foundArticle={}", foundArticle);
+
+        if (! foundArticle.getAuthorId().equals(request.getAuthorId()))
+            throw new IllegalArgumentException("authorId is wrong");
+
+        articleRepository.delete(foundArticle);
+        CommonGrpcUtil.completeResponseObserver(responseObserver, Common.Empty.getDefaultInstance());
+    }
 }

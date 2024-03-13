@@ -12,7 +12,7 @@ service Article {
   rpc registerArticle (GrpcRegisterArticleRequest) returns (GrpcArticleResponse);
   rpc getArticleIdBySlug (GrpcSlugRequest) returns (GrpcIdResponse);
   rpc getArticleBySlug (GrpcSlugRequest) returns (GrpcArticleResponse);
-  rpc deleteArticleBySlug (GrpcSlugRequest) returns (Empty);
+  rpc deleteArticleBySlug (GrpcSlugAuthorIdRequest) returns (Empty);
   rpc getArticles (GrpcPageRequest) returns (GrpcGetArticlesResponse);
   rpc getArticlesByArticleIds (GrpcArticlesByArticleIdsRequest) returns (GrpcGetArticlesResponse);
   rpc getArticlesByAuthorId (GrpcArticlesByAuthorIdRequest) returns (GrpcGetArticlesResponse);
@@ -51,6 +51,11 @@ message GrpcGetArticlesResponse {
 //  int64 numberOfElements = 5;
 //  bool first = 6;
 //  bool last = 7;
+}
+
+message GrpcSlugAuthorIdRequest {
+  string slug = 1;
+  int64 authorId = 2;
 }
 
 message GrpcArticlesByArticleIdsRequest {

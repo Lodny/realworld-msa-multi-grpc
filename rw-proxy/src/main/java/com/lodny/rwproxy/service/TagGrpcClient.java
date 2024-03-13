@@ -2,7 +2,7 @@ package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.tag.TagGrpc;
 import com.lodny.rwcommon.grpc.tag.GrpcTopTagStringsRequest;
-import com.lodny.rwcommon.grpc.tag.GrpcTopTagStringsResponse;
+import com.lodny.rwcommon.grpc.tag.GrpcTagStringsResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,9 @@ public class TagGrpcClient {
     private TagGrpc.TagBlockingStub tagBlockingStub;
 
     public List<String> getTopTagStrings(int count) {
-        GrpcTopTagStringsResponse topTagStrings = tagBlockingStub.getTopTagStrings(GrpcTopTagStringsRequest.newBuilder().setCount(count).build());
+        GrpcTagStringsResponse topTagStrings = tagBlockingStub.getTopTagStrings(GrpcTopTagStringsRequest.newBuilder().setCount(count).build());
         log.info("getTopTagStrings() : topTagStrings={}", topTagStrings);
 
-        return topTagStrings.getTagsList();
+        return topTagStrings.getTagStringList();
     }
 }

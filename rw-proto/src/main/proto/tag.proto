@@ -9,16 +9,16 @@ option java_package = "com.lodny.rwcommon.grpc.tag";
 
 service Tag {
   rpc registerTags (GrpcRegisterTagsRequest) returns (Empty);
-  rpc getTopTagStrings (GrpcTopTagStringsRequest) returns (GrpcTopTagStringsResponse);
-  rpc getTagStringsByArticleId (GrpcArticleIdRequest) returns (GrpcTagStringsByArticleIdResponse);
+  rpc getTopTagStrings (GrpcTopTagStringsRequest) returns (GrpcTagStringsResponse);
+  rpc getTagStringsByArticleId (GrpcArticleIdRequest) returns (GrpcTagStringsResponse);
   rpc getArticleIdsByTagString (GrpcArticleIdsByTagStringRequest) returns (GrpcArticleIdsByTagStringResponse);
-  rpc deleteTagsByArticleId (GrpcTagsByArticleIdRequest) returns (Empty);
+  rpc deleteTagsByArticleId (GrpcArticleIdRequest) returns (Empty);
 }
 
 
 message GrpcRegisterTagsRequest {
   int64 articleId = 1;
-  repeated string tags = 2;
+  repeated string tagString = 2;
 }
 
 
@@ -26,14 +26,9 @@ message GrpcTopTagStringsRequest {
   int32 count = 1;
 }
 
-message GrpcTopTagStringsResponse {
-  repeated string tags = 1;
+message GrpcTagStringsResponse {
+  repeated string tagString = 1;
 }
-
-message GrpcTagStringsByArticleIdResponse   {
-  repeated string tags = 1;
-}
-
 
 message GrpcArticleIdsByTagStringRequest {
   string tagString = 1;
@@ -41,10 +36,5 @@ message GrpcArticleIdsByTagStringRequest {
 
 message GrpcArticleIdsByTagStringResponse {
   repeated int64 articleId = 1;
-}
-
-
-message GrpcTagsByArticleIdRequest {
-  int64 articleId = 1;
 }
 

@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ArticleGrpcClient {
     }
 
     public ArticleResponse getArticleResponse(final GrpcArticleResponse grpcArticle, final long loginUserId) {
-        GrpcTagStringsByArticleIdResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
+        GrpcTagStringsResponse tagResponse = tagStub.getTagStringsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
                 .setArticleId(grpcArticle.getId())
                 .build());
         log.info("getArticleResponses() : tagResponse={}", tagResponse);
@@ -90,7 +91,7 @@ public class ArticleGrpcClient {
                 grpcArticle.getTitle(),
                 grpcArticle.getDescription(),
                 grpcArticle.getBody(),
-                new HashSet<>(tagResponse.getTagsList()),
+                new HashSet<>(tagResponse.getTagStringList()),
                 CommonGrpcUtil.toLocalDateTime(grpcArticle.getCreatedAt()),
                 CommonGrpcUtil.toLocalDateTime(grpcArticle.getUpdatedAt()),
                 favorited,
@@ -218,6 +219,32 @@ public class ArticleGrpcClient {
                 .build());
         log.info("registerArticle() : grpcArticle={}", grpcArticle);
 
+        tagStub.registerTags(GrpcRegisterTagsRequest.newBuilder()
+                .setArticleId(grpcArticle.getId())
+                .addAllTagString(registerArticleRequest.tagList())
+                .build());
+
         return getArticleResponse(grpcArticle, loginUserId);
+    }
+
+    @Transactional
+    public void deleteArticleBySlug(final String slug, final long loginUserId) {
+        Common.GrpcIdResponse grpcResponse = articleStub.getArticleIdBySlug(Common.GrpcSlugRequest.newBuilder()
+                .setSlug(slug)
+                .build());
+        log.info("deleteArticleBySlug() : grpcResponse={}", grpcResponse);
+
+        Common.Empty tagResponse = tagStub.deleteTagsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
+                .setArticleId(grpcResponse.getId())
+                .build());
+
+//        commentStub.deleteTagsByArticleId(Common.GrpcArticleIdRequest.newBuilder()
+//                .setArticleId(grpcResponse.getId())
+//                .build());
+
+        Common.Empty empty = articleStub.deleteArticleBySlug(GrpcSlugAuthorIdRequest.newBuilder()
+                .setSlug(slug)
+                .setAuthorId(loginUserId)
+                .build());
     }
 }

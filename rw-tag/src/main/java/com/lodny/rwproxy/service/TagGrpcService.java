@@ -2,6 +2,7 @@ package com.lodny.rwproxy.service;
 
 import com.lodny.rwcommon.grpc.common.Common;
 import com.lodny.rwcommon.grpc.tag.*;
+import com.lodny.rwcommon.util.CommonGrpcUtil;
 import com.lodny.rwproxy.entity.Tag;
 import com.lodny.rwproxy.repository.TagRepository;
 import io.grpc.stub.StreamObserver;
@@ -23,17 +24,18 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
     public void registerTags(final GrpcRegisterTagsRequest request, final StreamObserver<Common.Empty> responseObserver) {
         long articleId = request.getArticleId();
         log.info("registerTags() : articleId={}", articleId);
+        if (articleId == 0L)
+            throw new IllegalArgumentException("articleId not found");
 
-        tagRepository.saveAll(request.getTagsList().stream()
+        tagRepository.saveAll(request.getTagStringList().stream()
                 .map(tag -> new Tag(articleId, tag))
                 .toList());
 
-        responseObserver.onNext(Common.Empty.getDefaultInstance());
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver);
     }
 
     @Override
-    public void getTopTagStrings(final GrpcTopTagStringsRequest request, final StreamObserver<GrpcTopTagStringsResponse> responseObserver) {
+    public void getTopTagStrings(final GrpcTopTagStringsRequest request, final StreamObserver<GrpcTagStringsResponse> responseObserver) {
         PageRequest pageRequest = PageRequest.of(0, request.getCount());
         log.info("getTopTagStrings() : pageRequest={}", pageRequest);
 
@@ -42,29 +44,27 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
                 .map(tag -> tag[0]).toList();
         log.info("getTopTagStrings() : topTags={}", topTags);
 
-        GrpcTopTagStringsResponse response = GrpcTopTagStringsResponse.newBuilder()
-                .addAllTags(topTags)
+        GrpcTagStringsResponse response = GrpcTagStringsResponse.newBuilder()
+                .addAllTagString(topTags)
                 .build();
         log.info("getTopTagStrings() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
-    public void getTagStringsByArticleId(final Common.GrpcArticleIdRequest request, final StreamObserver<GrpcTagStringsByArticleIdResponse> responseObserver) {
+    public void getTagStringsByArticleId(final Common.GrpcArticleIdRequest request, final StreamObserver<GrpcTagStringsResponse> responseObserver) {
         List<String> tags = tagRepository.findAllByArticleId(request.getArticleId())
                 .stream().map(Tag::getTag)
                 .toList();
         log.info("getTagsByArticleId() : tags={}", tags);
 
-        GrpcTagStringsByArticleIdResponse response = GrpcTagStringsByArticleIdResponse.newBuilder()
-                .addAllTags(tags)
+        GrpcTagStringsResponse response = GrpcTagStringsResponse.newBuilder()
+                .addAllTagString(tags)
                 .build();
         log.info("getTagStringsByArticleId() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
@@ -79,17 +79,15 @@ public class TagGrpcService extends com.lodny.rwcommon.grpc.tag.TagGrpc.TagImplB
                 .build();
         log.info("getArticleIdsByTagString() : response={}", response);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver, response);
     }
 
     @Override
-    public void deleteTagsByArticleId(final GrpcTagsByArticleIdRequest request, final StreamObserver<Common.Empty> responseObserver) {
+    public void deleteTagsByArticleId(final Common.GrpcArticleIdRequest request, final StreamObserver<Common.Empty> responseObserver) {
         log.info("deleteTagsByArticleId() :");
 
         tagRepository.deleteAllByArticleId(request.getArticleId());
 
-        responseObserver.onNext(Common.Empty.getDefaultInstance());
-        responseObserver.onCompleted();
+        CommonGrpcUtil.completeResponseObserver(responseObserver);
     }
 }

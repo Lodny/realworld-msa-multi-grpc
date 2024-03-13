@@ -1,6 +1,7 @@
 package com.lodny.rwcommon.util;
 
 import com.google.protobuf.Timestamp;
+import com.lodny.rwcommon.grpc.common.Common;
 import io.grpc.stub.StreamObserver;
 
 import java.time.Instant;
@@ -23,5 +24,9 @@ public class CommonGrpcUtil {
     public static <T> void completeResponseObserver(final StreamObserver<T> responseObserver, T response) {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    public static <T> void completeResponseObserver(final StreamObserver<T> responseObserver) {
+        CommonGrpcUtil.completeResponseObserver(responseObserver, (T) Common.Empty.getDefaultInstance());
     }
 }

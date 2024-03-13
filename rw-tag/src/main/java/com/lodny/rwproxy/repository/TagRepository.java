@@ -4,6 +4,7 @@ import com.lodny.rwproxy.entity.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -16,5 +17,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
     List<Tag> findAllByTag(String tag);
 
-    List<Tag> deleteAllByArticleId(Long articleId);
+    @Transactional
+    void deleteAllByArticleId(Long articleId);
 }

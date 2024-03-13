@@ -97,16 +97,13 @@ public class ArticleController {
         return ResponseEntity.ok(new WrapArticleResponses(pageArticles));
     }
 
-//    @JwtTokenRequired
-//    @DeleteMapping("/{slug}")
-//    public ResponseEntity<Integer> deleteArticleBySlug(@PathVariable final String slug,
-//                                                       @LoginUser final LoginInfo loginInfo) {
-//        log.info("deleteArticleBySlug() : slug={}", slug);
-//
-//        int count = articleService.deleteArticleBySlug(slug, loginInfo.getUserId(), loginInfo.getToken());
-//        log.info("deleteArticleBySlug() : count={}", count);
-//
-//        return ResponseEntity.ok(1);
-//    }
+    @JwtTokenRequired
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<Integer> deleteArticleBySlug(@PathVariable final String slug,
+                                                       @LoginUser final LoginInfo loginInfo) {
+        log.info("deleteArticleBySlug() : slug={}", slug);
+        articleGrpcClient.deleteArticleBySlug(slug, loginInfo.getUserId());
 
+        return ResponseEntity.ok(1);
+    }
 }
